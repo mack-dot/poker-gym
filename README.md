@@ -24,6 +24,28 @@ with a 95% CI, finish distribution, deadline misses, illegal actions, and a
 **paired** comparison against a baseline replayed in the same seats. Full
 guide: `docs/gym.md`.
 
+## Tournament day
+
+```
+python drills/fake_kit/run_drill.py reference_adapter.py:Adapted      # rehearse wiring to an unseen kit
+python scripts/bundle.py --bot examples/my_bot.py:MyBot --out submission/bot.py   # one file, no deps, smoke-tested
+```
+
+- `docs/runbook_60min.md`: minute-by-minute plan from kit drop to final
+  submission, plus a rule-variant checklist mapped to `pokergym` knobs.
+- `pokergym/bridge.py`: `build_observation(**plain_values)` turns whatever
+  the kit gives (card strings, stacks, bets) into our `Observation`, deriving
+  pot, to-call and raise bounds; `action_to_text` / `action_from_text` are a
+  REHEARSAL text codec modelled on the landing-page demo.
+- `drills/fake_kit/`: a deliberately different mock kit, an answer-key
+  adapter, and a runner that checks legality, decision parity with the
+  native bot, and overhead. Target: PASS in 15 minutes.
+- `scripts/bundle.py`: inlines the bot and every `pokergym` module it uses
+  into one file with the equity table embedded (~100 KB), then plays it
+  against the sparring roster before it will say "wrote".
+- Every sparring bot has `configure(rules)`: the gym calls it so the bot's
+  hand evaluator follows the variant's `HandRanking`.
+
 ## Status of the P0 deliverables
 
 | # | Deliverable | Where |
@@ -33,7 +55,7 @@ guide: `docs/gym.md`.
 | 3 | Tournament and ICM scoring | `pokergym/tournament.py` (`assign_finishes`, `run_round`, `final_score`), `pokergym/icm.py` |
 | 4 | Three baseline bots | `pokergym/bots/` — `CallBot`, `RandomBot`, `HeuristicBot` (fixtures, not strong play) |
 | 5 | Two verified variant mutations | `pokergym/variants.py`; specs in `docs/variants/` |
-| 6 | Passing correctness tests | `tests/` — 116 tests incl. PokerKit parity, 15 injected faults, a determinism regression suite, and the gym |
+| 6 | Passing correctness tests | `tests/` — 137 tests incl. PokerKit parity, 15 injected faults, a determinism regression suite, and the gym |
 | 7 | Throughput benchmarks | `docs/benchmarks.md`, `benchmarks/results/throughput*.json` |
 | 8 | Decision-latency benchmarks | `docs/benchmarks.md`, `benchmarks/results/latency.json` |
 | 9 | Exact commands | below |
@@ -90,7 +112,7 @@ print(res.points, res.positions, res.icm_applied, res.record_hash)
 ## Tests and benchmarks
 
 ```
-python -m pytest                       # 116 tests, ~25 s (includes the exhaustive 2.6M-hand evaluator check)
+python -m pytest                       # 137 tests, ~25 s (includes the exhaustive 2.6M-hand evaluator check)
 python -m pytest -m "not slow"         # ~18 s
 python benchmarks/bench_throughput.py --tournaments 100 1000 --workers 1 2 4 8 --mix mixed heuristic call --repeats 3
 python benchmarks/bench_latency.py --tournaments 200 --repeats 3
@@ -110,6 +132,7 @@ pokergym/
   checks.py      invariant checkers (used by tests, CLI --verify, fault-injection tests)
   variants.py    the two rule mutations
   adapters.py    seam for the official starter kit (no invented signatures)
+  bridge.py      build_observation from plain kit values; REHEARSAL text action codec
   testing.py     ScriptedAgent / PolicyAgent / build_deck for exact scenarios
   gym.py         load a bot by spec, lineups, paired evaluate(), ladder()
   equity.py      169 hand classes, Monte Carlo equity, precomputed preflop + vs-range tables
@@ -118,9 +141,11 @@ pokergym/
   bots/          fixtures: call, random, heuristic; sparring: tag, lag, shortstack, icm, adaptive
   bots/features.py  position, stack depth, made-hand class, draws/outs, board texture
 examples/        my_bot.py starter template
-tests/           correctness, PokerKit differential, fault injection, variants, gym
+drills/fake_kit/ mock kit + reference adapter + drill runner (wiring rehearsal)
+scripts/         bundle.py (single-file submission), gen_preflop_equity.py
+tests/           correctness, PokerKit differential, fault injection, variants, gym, bridge, bundle, drill
 benchmarks/      throughput and latency harnesses + results
-docs/            spec, engine evaluation, variants, benchmarks, fidelity, gym
+docs/            spec, engine evaluation, variants, benchmarks, fidelity, gym, 60-minute runbook
 ```
 
 Bots talk only to `pokergym.agent`. Rules are data in `pokergym.rules`.

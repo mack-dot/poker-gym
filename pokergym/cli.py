@@ -23,27 +23,27 @@ import time
 from .bots import BOT_REGISTRY
 from .cards import card_str, parse_cards
 from .checks import check_tournament
-from .gym import LINEUPS, evaluate, ladder, load_bot_class, resolve_lineup, split_label
+from .gym import LINEUPS, evaluate, instantiate, ladder, resolve_lineup, split_label
 from .tournament import run_round, run_tournament
 from .variants import VARIANTS
 
 DEFAULT_BOTS = "call,random,heuristic,random,heuristic,call,random,heuristic"
 
 
-def _bots(spec: str):
+def _bots(spec: str, rules=None):
     names = spec.split(",")
     if len(names) != 8:
         sys.exit(f"need 8 bots, got {len(names)}: {spec}")
     try:
-        classes = [load_bot_class(n) for n in names]
+        bots = [instantiate(n, rules) for n in names]
     except ValueError as e:
         sys.exit(str(e))
-    return [split_label(n)[1] for n in names], [c() for c in classes], names
+    return [split_label(n)[1] for n in names], bots, names
 
 
 def cmd_run(a):
     rules = VARIANTS[a.variant]
-    names, bots, specs = _bots(a.bots)
+    names, bots, specs = _bots(a.bots, rules)
     t0 = time.perf_counter()
     res = run_tournament(bots, rules=rules, seed=a.seed, keep_hands=True, button_start=a.button)
     dt = time.perf_counter() - t0
@@ -73,7 +73,7 @@ def cmd_replay(a):
     with open(a.record) as f:
         d = json.load(f)
     rules = VARIANTS[d["variant"]]
-    names, bots, _ = _bots(",".join(d["bots"]))
+    names, bots, _ = _bots(",".join(d["bots"]), rules)
     res = run_tournament(bots, rules=rules, seed=d["seed"], keep_hands=True, button_start=d["button_start"])
     ok = res.record_hash == d["record_hash"]
     print(f"replay seed={d['seed']} hands={res.hands_played} hash_match={ok}")
@@ -83,8 +83,8 @@ def cmd_replay(a):
 
 def cmd_round(a):
     rules = VARIANTS[a.variant]
-    names, _, specs = _bots(a.bots)
-    factories = [load_bot_class(n) for n in specs]
+    names, _, specs = _bots(a.bots, rules)
+    factories = [(lambda s=s: instantiate(s, rules)) for s in specs]
     t0 = time.perf_counter()
     rs = run_round(factories, names, tables=a.tables, seed=a.seed, rules=rules)
     dt = time.perf_counter() - t0

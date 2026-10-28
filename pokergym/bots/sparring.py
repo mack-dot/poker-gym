@@ -21,6 +21,7 @@ import random
 
 from ..agent import CALL, CHECK, FOLD, Action, Observation, TableInfo, raise_to
 from ..equity import equity_vs_top, hand_percentile, preflop_equity
+from ..evaluator import Evaluator, STANDARD_EVALUATOR
 from ..icm import icm_equity_for
 from ..rules import SYNTHETIC_PAYOUTS
 from ..stats import OpponentTracker
@@ -98,13 +99,20 @@ class SparringBot:
     use_tracker = False
     pushfold_only_when_short = False
 
-    def __init__(self, profile: Profile | None = None):
+    def __init__(self, profile: Profile | None = None, evaluator: Evaluator | None = None):
         if profile is not None:
             self.profile = profile
+        self.evaluator = evaluator or STANDARD_EVALUATOR
         self.rng = random.Random(0)
         self.seat = 0
         self.tracker: OpponentTracker | None = None
         self._prem_cache = (-1, 0.0)
+
+    def configure(self, rules) -> None:
+        """REHEARSAL hook: the gym calls this with the ``GameRules`` in force so
+        the bot can adopt the variant's hand ranking. The official kit will
+        expose the variant some other way; this is where it gets wired."""
+        self.evaluator = rules.ranking.evaluator()
 
     def reset(self, table: TableInfo) -> None:
         self.rng = random.Random(table.seed)
@@ -310,7 +318,7 @@ class SparringBot:
     def _postflop(self, obs: Observation) -> Action:
         P = self.profile
         rng = self.rng
-        f = F.hand_features(obs.hole_cards, obs.board)
+        f = F.hand_features(obs.hole_cards, obs.board, self.evaluator)
         opp_in = F.opponents_in_hand(obs)
         pot = obs.pot
         stack = obs.stacks[obs.seat]

@@ -7,3 +7,6 @@ runs/
 *.egg-info/
 build/
 dist/
+drills/fake_kit/LOG.md
+drills/fake_kit/my_adapter.py
+submission/

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from .agent import ActionType, Observation
 
-FOLD, CHECK, CALL, RAISE = (int(ActionType.FOLD), int(ActionType.CHECK), int(ActionType.CALL), int(ActionType.RAISE))
+_FOLD, _CHECK, _CALL, _RAISE = (int(ActionType.FOLD), int(ActionType.CHECK), int(ActionType.CALL), int(ActionType.RAISE))
 
 # Population priors (loose fixtures; overridden quickly by data).
 PRIOR = {
@@ -148,7 +148,7 @@ class OpponentTracker:
                     s = (s + 1) % n
                 order.append(s)
         self.start_hand(rec["hand"], order)
-        kinds = {"fold": FOLD, "check": CHECK, "call": CALL, "raise": RAISE}
+        kinds = {"fold": _FOLD, "check": _CHECK, "call": _CALL, "raise": _RAISE}
         for st_name, seat, kind, amount in rec["actions"]:
             self._action(STREET_NAMES.index(st_name), seat, kinds[kind], amount)
         for amt, eligible, winners in rec["pots"]:
@@ -163,20 +163,20 @@ class OpponentTracker:
         order = self._order
         if st == 0:
             facing = self._pre_raises
-            if kind in (CALL, RAISE) and seat not in self._vpip_done:
+            if kind in (_CALL, _RAISE) and seat not in self._vpip_done:
                 self._vpip_done.add(seat)
                 ss.vpip += 1
             if facing == 1 and seat not in self._three_bet_opp_done and self._pre_raiser != seat:
                 self._three_bet_opp_done.add(seat)
                 ss.three_bet_opp += 1
-                if kind == RAISE:
+                if kind == _RAISE:
                     ss.three_bet += 1
             if self._steal_open and facing == 1 and seat in order[:2] and seat not in self._steal_done:
                 self._steal_done.add(seat)
                 ss.steal_faced += 1
-                if kind == FOLD:
+                if kind == _FOLD:
                     ss.fold_to_steal += 1
-            if kind == RAISE:
+            if kind == _RAISE:
                 if seat not in self._pfr_done:
                     self._pfr_done.add(seat)
                     ss.pfr += 1
@@ -185,17 +185,17 @@ class OpponentTracker:
                     self._steal_open = seat in late
                 self._pre_raises += 1
                 self._pre_raiser = seat
-            elif kind == CALL:
+            elif kind == _CALL:
                 self._pre_callers += 1
             return
         # postflop
         if st != self._street:
             self._street = st
-        if kind == RAISE:
+        if kind == _RAISE:
             ss.post_bets += 1
-        elif kind == CALL:
+        elif kind == _CALL:
             ss.post_calls += 1
-        elif kind == CHECK:
+        elif kind == _CHECK:
             ss.post_checks += 1
         else:
             ss.post_folds += 1
@@ -204,15 +204,15 @@ class OpponentTracker:
                 if seat == self._pre_raiser and not self._cbet_opp_done:
                     self._cbet_opp_done = True
                     ss.cbet_opp += 1
-                    if kind == RAISE:
+                    if kind == _RAISE:
                         ss.cbet += 1
                         self._cbet_made = True
-                if kind == RAISE:
+                if kind == _RAISE:
                     self._flop_bet = True
             elif self._cbet_made and seat != self._pre_raiser and seat not in self._fold_to_cbet_done:
                 self._fold_to_cbet_done.add(seat)
                 ss.fold_to_cbet_opp += 1
-                if kind == FOLD:
+                if kind == _FOLD:
                     ss.fold_to_cbet += 1
 
     # --- queries -------------------------------------------------------------

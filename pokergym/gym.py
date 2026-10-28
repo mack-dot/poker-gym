@@ -93,6 +93,17 @@ def make_factory(spec: str) -> Callable[[], object]:
     return cls
 
 
+def instantiate(spec: str, rules: GameRules | None = None):
+    """Construct a bot and, if it defines ``configure(rules)``, tell it the
+    rules in force (REHEARSAL hook; how the official kit exposes the variant
+    is unknown)."""
+    bot = load_bot_class(spec)()
+    cfg = getattr(bot, "configure", None)
+    if rules is not None and callable(cfg):
+        cfg(rules)
+    return bot
+
+
 def resolve_lineup(lineup: str | Sequence[str]) -> list[str]:
     if isinstance(lineup, str):
         if lineup in LINEUPS:
@@ -218,9 +229,9 @@ def _play_table(candidate: str, table_seed: int, seat: int, opps: list[str], rul
     oi = 0
     for s in range(rules.players):
         if s == seat:
-            agents.append(load_bot_class(candidate)())
+            agents.append(instantiate(candidate, rules))
         else:
-            agents.append(load_bot_class(opps[oi])())
+            agents.append(instantiate(opps[oi], rules))
             oi += 1
     res = run_tournament(agents, rules, seed=table_seed, keep_hands=False)
     bust_hand = None
@@ -381,7 +392,7 @@ def _ladder_worker(args):
     rules = _rules_from_key(rules_key)
     out = []
     for (t, table_seed, ids) in items:
-        agents = [load_bot_class(specs[i])() for i in ids]
+        agents = [instantiate(specs[i], rules) for i in ids]
         res = run_tournament(agents, rules, seed=table_seed, keep_hands=False)
         out.append((t, ids, res.points))
     return out
@@ -448,6 +459,6 @@ def ladder(
 
 
 __all__ = [
-    "LINEUPS", "FIXTURE_BOTS", "SPARRING_BOTS", "load_bot_class", "make_factory", "resolve_lineup",
+    "LINEUPS", "FIXTURE_BOTS", "SPARRING_BOTS", "load_bot_class", "make_factory", "instantiate", "resolve_lineup",
     "evaluate", "EvalReport", "ladder", "LadderReport",
 ]

@@ -142,9 +142,12 @@ class HandFeatures:
         return " ".join(f"{k}={getattr(self, k)}" for k in self.__slots__)
 
 
-def hand_features(hole, board) -> HandFeatures:
+def hand_features(hole, board, evaluator=STANDARD_EVALUATOR) -> HandFeatures:
+    """``evaluator`` is the variant's evaluator; categories are canonical
+    detection ids, so the made-hand classes below are ranking-independent and
+    only ``value`` / ``plays_board`` depend on the variant."""
     f = HandFeatures()
-    ev = STANDARD_EVALUATOR
+    ev = evaluator
     cards = tuple(hole) + tuple(board)
     f.value = v = ev.evaluate(cards)
     cat = ev.category(v)
