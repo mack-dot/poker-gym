@@ -150,3 +150,58 @@ class GameRules:
 
 
 BASELINE_RULES = GameRules()
+
+
+# --------------------------------------------------------------------------
+# Machine-readable form (used by the arena to seal/reveal a variant and to
+# ship it to the competitor workspace, and by the gym to pass rules to
+# worker processes).
+# --------------------------------------------------------------------------
+def rules_to_dict(r: GameRules) -> dict:
+    return {
+        "name": r.name,
+        "description": r.description,
+        "players": r.players,
+        "starting_stack": r.starting_stack,
+        "max_hands": r.max_hands,
+        "hole_cards": r.hole_cards,
+        "board_streets": list(r.board_streets),
+        "blinds": {
+            "levels": [list(l) for l in r.blinds.levels],
+            "hands_per_level": r.blinds.hands_per_level,
+            "ante": list(r.blinds.ante),
+            "label": r.blinds.label,
+        },
+        "payouts": {"points": list(r.payouts.points), "label": r.payouts.label},
+        "betting": {
+            "limit": r.betting.limit,
+            "raise_cap_per_street": r.betting.raise_cap_per_street,
+            "short_all_in_reopens": r.betting.short_all_in_reopens,
+            "bb_is_min_bet_even_if_short": r.betting.bb_is_min_bet_even_if_short,
+        },
+        "ranking": {"strength": list(r.ranking.strength), "name": r.ranking.name},
+        "decision_deadline_ms": r.decision_deadline_ms,
+        "deadline_mode": r.deadline_mode,
+    }
+
+
+def rules_from_dict(d: dict) -> GameRules:
+    b = d["blinds"]
+    return GameRules(
+        name=d["name"],
+        description=d.get("description", ""),
+        players=d["players"],
+        starting_stack=d["starting_stack"],
+        max_hands=d["max_hands"],
+        hole_cards=d["hole_cards"],
+        board_streets=tuple(d["board_streets"]),
+        blinds=BlindSchedule(
+            levels=tuple(tuple(l) for l in b["levels"]), hands_per_level=b["hands_per_level"],
+            ante=tuple(b.get("ante", ())), label=b.get("label", "synthetic"),
+        ),
+        payouts=PayoutSchedule(points=tuple(d["payouts"]["points"]), label=d["payouts"].get("label", "synthetic")),
+        betting=BettingRules(**d["betting"]),
+        ranking=HandRanking(strength=tuple(d["ranking"]["strength"]), name=d["ranking"]["name"]),
+        decision_deadline_ms=d.get("decision_deadline_ms", CONFIRMED_DECISION_DEADLINE_MS),
+        deadline_mode=d.get("deadline_mode", "record"),
+    )

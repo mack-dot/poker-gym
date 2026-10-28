@@ -138,7 +138,7 @@ class Observation:
         d = {k: getattr(self, k) for k in self.__slots__}
         d["hole_cards"] = [card_str(c) for c in self.hole_cards]
         d["board"] = [card_str(c) for c in self.board]
-        d["history"] = [(s, st, a.serialize()) for (s, st, a) in self.history]
+        d["history"] = [list(h) for h in self.history]  # (street, seat, kind, amount)
         return d
 
 

@@ -88,3 +88,14 @@ between runs. Budget for that variance when comparing submissions.
 2. Build `GameRules` from the kit's payout/blind files; set the real variant.
 3. Run the three bots in both simulators with the same seating; compare per-position point distributions over N tables (aggregate parity). If the kit exposes decks, compare hand records directly (exact parity).
 4. Record each confirmed difference in the table above and change the engine default, not the bots.
+
+## Rehearsal environment (arena) fidelity
+
+`docs/arena.md` §9 lists what the sealed rehearsal reproduces and what it
+does not. In short: the 60-minute window, five-minute cadence, Python
+`Agent` interface, 8-player 2000-chip SNG, 200-hand cap with ICM, 1 ms
+deadline with check/fold fallback, 100 MB limit, no network, per-table
+reset, and anonymous opponents are implemented and enforced. Payouts, blind
+schedule, slot semantics for rejected submissions, the timeout tolerance,
+the hidden opponents, and every mutation are REHEARSAL/synthetic. Timing is
+wall-clock sampling in Python, not the organizer's harness.

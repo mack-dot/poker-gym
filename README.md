@@ -46,6 +46,20 @@ python scripts/bundle.py --bot examples/my_bot.py:MyBot --out submission/bot.py 
 - Every sparring bot has `configure(rules)`: the gym calls it so the bot's
   hand evaluator follows the variant's `HandRanking`.
 
+## Sealed rehearsal (the arena)
+
+```
+python -m pokergym.arena smoke                            # ~90 s bounded end-to-end run with a stand-in competitor
+python -m pokergym.arena rehearse ~/arena/r1 --seed 7     # the real 60-minute exercise; you press Enter to start
+```
+
+A concealed one-rule mutation (17 in reserve, 6 families), a sandboxed
+workspace holding only what the organizer would hand over, a real 60-minute
+clock with one submission per 5 minutes, a 7-stage validator, a hidden
+evaluation against withheld opponents and seeds, and a postmortem with A-F
+failure classes. Nothing in it starts an AI; the real run is a command you
+launch yourself. Guide, measurements, and limitations: `docs/arena.md`.
+
 ## Status of the P0 deliverables
 
 | # | Deliverable | Where |
@@ -55,7 +69,7 @@ python scripts/bundle.py --bot examples/my_bot.py:MyBot --out submission/bot.py 
 | 3 | Tournament and ICM scoring | `pokergym/tournament.py` (`assign_finishes`, `run_round`, `final_score`), `pokergym/icm.py` |
 | 4 | Three baseline bots | `pokergym/bots/` — `CallBot`, `RandomBot`, `HeuristicBot` (fixtures, not strong play) |
 | 5 | Two verified variant mutations | `pokergym/variants.py`; specs in `docs/variants/` |
-| 6 | Passing correctness tests | `tests/` — 137 tests incl. PokerKit parity, 15 injected faults, a determinism regression suite, and the gym |
+| 6 | Passing correctness tests | `tests/` — 201 tests incl. PokerKit parity, 15 injected faults, a determinism regression suite, the gym, and the arena lifecycle |
 | 7 | Throughput benchmarks | `docs/benchmarks.md`, `benchmarks/results/throughput*.json` |
 | 8 | Decision-latency benchmarks | `docs/benchmarks.md`, `benchmarks/results/latency.json` |
 | 9 | Exact commands | below |
@@ -112,8 +126,9 @@ print(res.points, res.positions, res.icm_applied, res.record_hash)
 ## Tests and benchmarks
 
 ```
-python -m pytest                       # 137 tests, ~25 s (includes the exhaustive 2.6M-hand evaluator check)
-python -m pytest -m "not slow"         # ~18 s
+python -m pytest                       # 201 tests, ~3-4 min (sandboxed arena lifecycle, a 45 s real-clock smoke rehearsal, 2.6M-hand evaluator check)
+python -m pytest -m "not slow"         # ~2 min
+python benchmarks/bench_arena.py --out benchmarks/results/arena.json
 python benchmarks/bench_throughput.py --tournaments 100 1000 --workers 1 2 4 8 --mix mixed heuristic call --repeats 3
 python benchmarks/bench_latency.py --tournaments 200 --repeats 3
 ```

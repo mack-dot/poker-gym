@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
+import json
 import math
 import os
 import random
@@ -34,7 +35,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Sequence
 
 from .bots import BOT_REGISTRY, FIXTURE_BOTS, SPARRING_BOTS
-from .rules import GameRules, BASELINE_RULES
+from .rules import GameRules, BASELINE_RULES, rules_from_dict, rules_to_dict
 from .tournament import run_tournament
 from .variants import VARIANTS
 
@@ -238,10 +239,12 @@ def _play_table(candidate: str, table_seed: int, seat: int, opps: list[str], rul
     if seat in res.elimination_order:
         bust_hand = res.elimination_hands[res.elimination_order.index(seat)]
     opp_points = {}
+    opp_positions = {}
     oi = 0
     for s in range(rules.players):
         if s != seat:
             opp_points.setdefault(opps[oi], []).append(res.points[s])
+            opp_positions.setdefault(opps[oi], []).append(res.positions[s])
             oi += 1
     return {
         "points": res.points[seat],
@@ -250,8 +253,10 @@ def _play_table(candidate: str, table_seed: int, seat: int, opps: list[str], rul
         "icm": res.icm_applied,
         "busted": seat in res.elimination_order,
         "bust_hand": bust_hand,
+        "final_stack": res.final_stacks[seat],
         "stats": res.agent_stats[seat],
         "opp_points": opp_points,
+        "opp_positions": opp_positions,
     }
 
 
@@ -274,10 +279,12 @@ def _rules_key(rules: GameRules) -> str:
     for k, v in VARIANTS.items():
         if v is rules or v == rules:
             return k
-    raise ValueError("multiprocess evaluation needs rules from pokergym.variants.VARIANTS")
+    return "json:" + json.dumps(rules_to_dict(rules), separators=(",", ":"))
 
 
 def _rules_from_key(key: str) -> GameRules:
+    if key.startswith("json:"):
+        return rules_from_dict(json.loads(key[5:]))
     return VARIANTS[key]
 
 

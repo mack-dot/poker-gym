@@ -103,6 +103,8 @@ class SparringBot:
         if profile is not None:
             self.profile = profile
         self.evaluator = evaluator or STANDARD_EVALUATOR
+        self.payouts = SYNTHETIC_PAYOUTS.points
+        self._shift = (0,) * 9
         self.rng = random.Random(0)
         self.seat = 0
         self.tracker: OpponentTracker | None = None
@@ -113,6 +115,10 @@ class SparringBot:
         the bot can adopt the variant's hand ranking. The official kit will
         expose the variant some other way; this is where it gets wired."""
         self.evaluator = rules.ranking.evaluator()
+        self.payouts = rules.payouts.points
+        # Category shift under the variant: +1 promoted, -1 demoted, 0 unchanged.
+        st = rules.ranking.strength
+        self._shift = tuple((st[c] > c) - (st[c] < c) for c in range(9))
 
     def reset(self, table: TableInfo) -> None:
         self.rng = random.Random(table.seed)
@@ -162,20 +168,25 @@ class SparringBot:
         hands_left = HAND_CAP - obs.hand_number
         prem = 0.0
         if k <= 5:
-            # Exact ICM for small fields: equity now vs equity after busting.
-            # Payouts: the bot does not receive the schedule through TableInfo
-            # (the official kit will ship one); the SYNTHETIC default is used.
-            pay = SYNTHETIC_PAYOUTS.points
-            remaining_pay = list(pay[:k])
+            # Exact ICM for small fields. Break-even equity for a stack-off
+            # against the largest opponent: (now - bust) / (double - bust).
+            # Chip-EV break-even for the same spot is ~0.5, so the premium is
+            # the excess. With a winner-take-all payout ICM equals chip share
+            # and the premium is 0, as it should be. Payouts come from
+            # configure(rules); SYNTHETIC default otherwise.
+            pay = list(self.payouts[:k])
             stacks = [obs.stacks[s] + obs.committed[s] for s in live]
             me = live.index(obs.seat)
-            eq_now = icm_equity_for(stacks, remaining_pay, me)
-            eq_bust = remaining_pay[-1]  # k-th place
-            total = sum(remaining_pay)
-            # share of equity at risk relative to the chip share
-            chip_share = stacks[me] / max(1.0, sum(stacks))
-            icm_share = (eq_now - eq_bust) / max(1e-9, total)
-            prem = max(0.0, (icm_share - chip_share) * 1.5)
+            eq_now = icm_equity_for(stacks, pay, me)
+            eq_bust = pay[-1]  # k-th place
+            j = max((i for i in range(k) if i != me), key=lambda i: stacks[i])
+            win = min(stacks[me], stacks[j])
+            dbl = list(stacks)
+            dbl[me] += win
+            dbl[j] -= win
+            eq_dbl = icm_equity_for(dbl, pay, me)
+            be = (eq_now - eq_bust) / max(1e-9, eq_dbl - eq_bust)
+            prem = max(0.0, be - 0.5)
         if hands_left <= 40:
             # Close to the cap, survival with chips is worth more than variance.
             prem += 0.04 * (1 - hands_left / 40.0)
@@ -325,6 +336,14 @@ class SparringBot:
         spr = stack / max(1, pot)
         made = f.made
         draw_eq = F.draw_equity(f, obs.street)
+        # Rule adaptation (set by configure): a made hand whose category the
+        # variant promotes is worth one class more, a demoted one a class less;
+        # draws to a demoted category are discounted.
+        sh = self._shift
+        if made >= F.MADE_TWO_PAIR_PLUS and sh[f.category]:
+            made = min(F.MADE_NUTTISH, max(F.MADE_OVERPAIR, made + sh[f.category]))
+        if draw_eq and ((f.flush_draw and sh[F.FLUSH] < 0) or (not f.flush_draw and sh[F.STRAIGHT] < 0)):
+            draw_eq *= 0.6
         eq = _MADE_EQ[made] * (0.87 ** max(0, opp_in - 1)) + draw_eq * (1 - _MADE_EQ[made])
         if f.board_flush4 and f.category < F.FLUSH:
             eq *= 0.7

@@ -1,0 +1,177 @@
+{
+ "machine": {
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu": "Apple M1 Pro",
+  "cores_logical": 10,
+  "cores_physical": "10",
+  "perf_cores": "8",
+  "eff_cores": "2",
+  "memory_bytes": "17179869184",
+  "python": "3.12.12",
+  "pokergym": "0.1.0"
+ },
+ "load_avg_start": 24.4599609375,
+ "command": "benchmarks/bench_arena.py --out benchmarks/results/arena.json --eval-tables 100 1000 10000 --workers 1 4 8",
+ "note": "REHEARSAL environment benchmark. Deadline figures are Python wall-clock samples around act(); not official timing.",
+ "mutation": "board-four-one",
+ "throughput": [
+  {
+   "deadline_mode": "off",
+   "tournaments": 200,
+   "wall_s": 4.681292541907169,
+   "tournaments_per_s": 42.723243251642536,
+   "hands_per_s": 7333.231087928183,
+   "decisions_per_s": 38971.715261715806,
+   "decisions_over_1ms": 0,
+   "over_1ms_frac": 0.0
+  },
+  {
+   "deadline_mode": "record",
+   "tournaments": 200,
+   "wall_s": 4.561097958008759,
+   "tournaments_per_s": 43.84909112702199,
+   "hands_per_s": 7526.47724649769,
+   "decisions_per_s": 39998.70243515819,
+   "decisions_over_1ms": 205,
+   "over_1ms_frac": 0.0011236694109779761
+  },
+  {
+   "deadline_mode": "enforce",
+   "tournaments": 200,
+   "wall_s": 5.385418541030958,
+   "tournaments_per_s": 37.13731782891529,
+   "hands_per_s": 6302.945581923504,
+   "decisions_per_s": 33682.24746470216,
+   "decisions_over_1ms": 242,
+   "over_1ms_frac": 0.0013341198392440722
+  }
+ ],
+ "serialization": {
+  "samples": 2000,
+  "to_dict_us": 4.272812511771917,
+  "json_dumps_us": 5.774520512204617,
+  "json_loads_us": 6.907229486387223,
+  "bytes_mean": 601.6665,
+  "round_trip_us": 16.954562510363758
+ },
+ "startup": {
+  "sandboxed_interpreter_s": 0.05165762500837445,
+  "kit_import_s": 0.0370702079962939,
+  "template_check_s": 0.4242989589693025,
+  "template_decision_p99_us": 6.646
+ },
+ "reproducibility": {
+  "tables": 200,
+  "identical_across_worker_counts": true,
+  "replay_check_a": true,
+  "replay_check_b": true
+ },
+ "eval_time": [
+  {
+   "tables": 100,
+   "workers": 1,
+   "wall_s": 12.768938458058983,
+   "tables_per_s_total": 29.75971739923039,
+   "score": 24.241540429622436,
+   "ci95": [
+    20.16613163173192,
+    28.316949227512954
+   ],
+   "reproducible": true,
+   "load_avg": 23.08349609375
+  },
+  {
+   "tables": 100,
+   "workers": 4,
+   "wall_s": 5.5625781250419095,
+   "tables_per_s_total": 68.31364727972014,
+   "score": 24.241540429622436,
+   "ci95": [
+    20.16613163173192,
+    28.316949227512954
+   ],
+   "reproducible": true,
+   "load_avg": 23.47705078125
+  },
+  {
+   "tables": 100,
+   "workers": 8,
+   "wall_s": 3.494241999927908,
+   "tables_per_s_total": 108.75033841612573,
+   "score": 24.241540429622436,
+   "ci95": [
+    20.16613163173192,
+    28.316949227512954
+   ],
+   "reproducible": true,
+   "load_avg": 23.7587890625
+  },
+  {
+   "tables": 1000,
+   "workers": 1,
+   "wall_s": 65.05808320897631,
+   "tables_per_s_total": 49.801651696264,
+   "score": 27.273172659589115,
+   "ci95": [
+    25.904411994997638,
+    28.64193332418059
+   ],
+   "reproducible": true,
+   "load_avg": 15.7861328125
+  },
+  {
+   "tables": 1000,
+   "workers": 4,
+   "wall_s": 21.743075417005457,
+   "tables_per_s_total": 149.0129587402326,
+   "score": 27.273172659589115,
+   "ci95": [
+    25.904411994997638,
+    28.64193332418059
+   ],
+   "reproducible": true,
+   "load_avg": 15.35986328125
+  },
+  {
+   "tables": 1000,
+   "workers": 8,
+   "wall_s": 17.056596874957904,
+   "tables_per_s_total": 189.95582904095554,
+   "score": 27.273172659589115,
+   "ci95": [
+    25.904411994997638,
+    28.64193332418059
+   ],
+   "reproducible": true,
+   "load_avg": 15.62548828125
+  },
+  {
+   "tables": 10000,
+   "workers": 4,
+   "wall_s": 186.46216195903253,
+   "tables_per_s_total": 171.83110859263493,
+   "score": 27.652512885316554,
+   "ci95": [
+    27.218265729084635,
+    28.086760041548473
+   ],
+   "reproducible": true,
+   "load_avg": 17.59326171875
+  },
+  {
+   "tables": 10000,
+   "workers": 8,
+   "wall_s": 124.30327208305243,
+   "tables_per_s_total": 257.75669025504556,
+   "score": 27.652512885316554,
+   "ci95": [
+    27.218265729084635,
+    28.086760041548473
+   ],
+   "reproducible": true,
+   "load_avg": 20.55078125
+  }
+ ],
+ "load_avg_end": 20.55078125
+}

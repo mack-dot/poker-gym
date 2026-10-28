@@ -1,5 +1,9 @@
 """Fast pure-Python high-hand evaluator for 5 to 7 cards.
 
+Inputs of 4 cards (bot feature extraction on a two-card board in the
+``board`` variants) return a well-formed value too, but such values are only
+comparable with other 4-card values.
+
 Returns an int; a higher value is a stronger hand. The value is
 ``(category_strength << 20) | tiebreak`` where ``tiebreak`` packs up to five
 rank nibbles, most significant first.
@@ -110,7 +114,7 @@ class Evaluator:
             quads = s0 & s1 & s2 & s3
             if quads:
                 q = _top_bit(quads)
-                kick = _top_bit(all_ranks & ~quads)
+                kick = max(0, _top_bit(all_ranks & ~quads))  # max(): 4-card input (bot features) has no kicker
                 best = st[QUADS] | (q << 16) | (kick << 12)
             else:
                 trips = (s0 & s1 & s2) | (s0 & s1 & s3) | (s0 & s2 & s3) | (s1 & s2 & s3)
@@ -126,7 +130,7 @@ class Evaluator:
                     if POPCOUNT[dup] >= 2:
                         hi = _top_bit(dup)
                         lo = _top_bit(dup & ~(1 << hi))
-                        kick = _top_bit(all_ranks & ~(1 << hi) & ~(1 << lo))
+                        kick = max(0, _top_bit(all_ranks & ~(1 << hi) & ~(1 << lo)))
                         best = st[TWO_PAIR] | (hi << 16) | (lo << 12) | (kick << 8)
                     else:
                         p = _top_bit(dup)
