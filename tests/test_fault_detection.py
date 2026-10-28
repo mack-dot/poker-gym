@@ -1,21 +1,20 @@
 """Deliberately incorrect cases: each injected fault must be detected by the
 checkers or by the oracle comparisons. If any of these tests fails, a
 correctness test has lost its teeth."""
-import copy
 import itertools
 import random
 
 import pytest
 
 from pokerlab import engine as engine_mod
-from pokerlab.agent import CALL, CHECK, FOLD, raise_to
+from pokerlab.agent import FOLD, raise_to
 from pokerlab.bots import CallBot, HeuristicBot, RandomBot
-from pokerlab.cards import fresh_deck, parse_cards
+from pokerlab.cards import fresh_deck
 from pokerlab.checks import (
     InvariantError, check_card_conservation, check_chip_conservation, check_points, check_rotation,
     check_termination, check_tournament,
 )
-from pokerlab.evaluator import FLUSH, HIGH_CARD, Evaluator, STANDARD_EVALUATOR, evaluate
+from pokerlab.evaluator import FLUSH, HIGH_CARD, Evaluator, evaluate
 from pokerlab.icm import brute_force_equities, icm_equities
 from pokerlab.rules import BASELINE_RULES
 from pokerlab.testing import ScriptedAgent, build_deck

@@ -6,8 +6,6 @@ here so that it can be replaced in one place when the starter kit arrives.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import Sequence
-
 from .evaluator import Evaluator, STANDARD_STRENGTH
 
 

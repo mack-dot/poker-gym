@@ -10,7 +10,7 @@ import random
 from typing import Sequence
 
 from .agent import Action, ActionType, AgentAdapter, Observation
-from .cards import card_str, fresh_deck
+from .cards import card_str, deal_cards
 from .evaluator import Evaluator
 from .rules import GameRules
 
@@ -99,10 +99,13 @@ def play_hand(
     pot_limit = betting.limit == "pot_limit"
     raise_cap = betting.raise_cap_per_street
 
+    pot_box = [0]  # running total of all chips committed this hand
+
     def commit(seat: int, amount: int, counts_as_bet: bool = True) -> int:
         a = amount if amount < stacks[seat] else stacks[seat]
         stacks[seat] -= a
         paid[seat] += a
+        pot_box[0] += a
         if counts_as_bet:
             bets[seat] += a
         if stacks[seat] == 0:
@@ -117,28 +120,23 @@ def play_hand(
     commit(bb_seat, bb_amt)
 
     # --- deal ---------------------------------------------------------------
+    hc = rules.hole_cards
+    board_total = sum(rules.board_streets)
     if deck is None:
-        deck = fresh_deck()
-        rng.shuffle(deck)
+        deck = deal_cards(rng, hc * k + board_total)
     hole: list[tuple[int, ...] | None] = [None] * n
-    idx = 0
     order_from_sb = []
     s = sb_seat
     for _ in range(k):
         order_from_sb.append(s)
         s = _next_live(s, live, n)
-    hc = rules.hole_cards
-    tmp = {s: [] for s in order_from_sb}
-    for _ in range(hc):
-        for s in order_from_sb:
-            tmp[s].append(deck[idx])
-            idx += 1
-    for s in order_from_sb:
-        hole[s] = tuple(tmp[s])
+    # round-robin from the small blind: seat j gets deck[j], deck[j + k], ...
+    for j, s in enumerate(order_from_sb):
+        hole[s] = tuple(deck[j + r * k] for r in range(hc))
+    idx = hc * k
     rec.hole = hole
     board: list[int] = []
     rec.board = board
-    board_total = sum(rules.board_streets)
     board_cards = deck[idx: idx + board_total]
 
     num_in_hand = k
@@ -153,21 +151,23 @@ def play_hand(
         start_i = live_seats.index(first)
         order = live_seats[start_i:] + live_seats[:start_i]
         i = 0
+        board_t = tuple(board)
         while True:
             if num_in_hand == 1:
                 return 1
-            contenders = [c for c in live_seats if in_hand[c] and not all_in[c]]
-            nc = len(contenders)
-            if nc == 0:
-                return num_in_hand
+            # contenders: in the hand and not all-in
+            nc = 0
             settled = True
-            for c in contenders:
-                if c not in acted or bets[c] != current_bet:
-                    settled = False
-                    break
-            if settled:
+            last_c = -1
+            for c in live_seats:
+                if in_hand[c] and not all_in[c]:
+                    nc += 1
+                    last_c = c
+                    if settled and (c not in acted or bets[c] != current_bet):
+                        settled = False
+            if nc == 0 or settled:
                 return num_in_hand
-            if nc == 1 and bets[contenders[0]] == current_bet:
+            if nc == 1 and bets[last_c] == current_bet:
                 return num_in_hand  # nobody left who could respond to a bet
             s = order[i % k]
             i += 1
@@ -184,8 +184,9 @@ def play_hand(
                 can_raise = False
             min_to = current_bet + min_raise_inc
             max_to = bets[s] + stack
+            pot = pot_box[0]
             if pot_limit:
-                pl = current_bet + to_call + sum(paid)
+                pl = current_bet + to_call + pot
                 if pl < max_to:
                     max_to = pl
             if max_to <= current_bet:
@@ -195,15 +196,11 @@ def play_hand(
             if not can_raise:
                 min_to = max_to = 0
 
-            pot = sum(paid)
             obs = Observation(
-                hand_number=hand_number, street=street, seat=s, button=button,
-                small_blind=sb_amt, big_blind=bb_amt, ante=ante,
-                hole_cards=hole[s], board=tuple(board), stacks=tuple(stacks), bets=tuple(bets),
-                committed=tuple(paid), in_hand=tuple(in_hand), all_in=tuple(all_in),
-                pot=pot, to_call=to_call if to_call < stack else stack, can_check=can_check,
-                can_raise=can_raise, min_raise_to=min_to, max_raise_to=max_to,
-                history=tuple(actions), num_players=n, live_players=k,
+                hand_number, street, s, button, sb_amt, bb_amt, ante,
+                hole[s], board_t, tuple(stacks), tuple(bets), tuple(paid), tuple(in_hand), tuple(all_in),
+                pot, to_call if to_call < stack else stack, can_check,
+                can_raise, min_to, max_to, tuple(actions), n, k,
             )
             a: Action = agents[s].act(obs)
             kind = a.kind

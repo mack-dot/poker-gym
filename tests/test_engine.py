@@ -3,11 +3,10 @@ import random
 
 import pytest
 
-from pokerlab.agent import CALL, CHECK, FOLD, ActionType, AgentAdapter, TableInfo, raise_to
-from pokerlab.cards import card_str, parse_cards
+from pokerlab.agent import CALL, CHECK, FOLD, ActionType, AgentAdapter, raise_to
 from pokerlab.engine import play_hand
 from pokerlab.rules import BASELINE_RULES, BettingRules, BlindSchedule
-from pokerlab.testing import PolicyAgent, ScriptedAgent, build_deck
+from pokerlab.testing import ScriptedAgent, build_deck
 from pokerlab.variants import VARIANT_A_FLUSH_BEATS_FULL_HOUSE, VARIANT_B_POT_LIMIT
 
 ALL = list(range(8))

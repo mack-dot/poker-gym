@@ -10,10 +10,7 @@ from __future__ import annotations
 import random
 
 from ..agent import CALL, CHECK, FOLD, Action, Observation, TableInfo, raise_to
-from ..evaluator import (
-    FLUSH, FULL_HOUSE, PAIR, QUADS, STRAIGHT, STRAIGHT_FLUSH, TRIPS, TWO_PAIR,
-    STANDARD_EVALUATOR,
-)
+from ..evaluator import PAIR, TWO_PAIR, STANDARD_EVALUATOR
 
 _CHEN_HIGH = {12: 10.0, 11: 8.0, 10: 7.0, 9: 6.0}
 

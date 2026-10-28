@@ -1,7 +1,7 @@
 import time
 
 from pokerlab.agent import (
-    CALL, CHECK, FOLD, Action, ActionType, AgentAdapter, Observation, TableInfo, raise_to,
+    CALL, CHECK, FOLD, Action, ActionType, AgentAdapter, Observation, raise_to,
 )
 from pokerlab.testing import CrashingAgent, PolicyAgent
 

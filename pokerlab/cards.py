@@ -47,3 +47,40 @@ def cards_str(cards) -> str:
 
 def fresh_deck() -> list[int]:
     return list(range(DECK_SIZE))
+
+
+def _perm_counts():
+    out = [1]
+    for k in range(1, DECK_SIZE + 1):
+        out.append(out[-1] * (DECK_SIZE - k + 1))
+    return tuple(out)
+
+
+_PERM_COUNT = _perm_counts()  # _PERM_COUNT[k] = 52! / (52-k)!
+_BITS = tuple(c.bit_length() + 64 for c in _PERM_COUNT)
+_LIMIT = tuple(((1 << b) // c) * c if c else 0 for b, c in zip(_BITS, _PERM_COUNT))
+
+
+def deal_cards(rng, k: int) -> list[int]:
+    """Exactly uniform ordered draw of ``k`` distinct cards from a fresh deck.
+
+    Uses one large ``getrandbits`` call (with rejection to remove modulo bias)
+    and decodes a k-permutation index, instead of ``rng.shuffle`` which costs
+    51 Python-level ``_randbelow`` calls. Deterministic for a seeded ``rng``.
+    """
+    total = _PERM_COUNT[k]
+    bits = _BITS[k]
+    limit = _LIMIT[k]
+    x = rng.getrandbits(bits)
+    while x >= limit:
+        x = rng.getrandbits(bits)
+    x %= total
+    pool = list(range(DECK_SIZE))
+    out = []
+    n = DECK_SIZE
+    for _ in range(k):
+        x, j = divmod(x, n)
+        out.append(pool[j])
+        n -= 1
+        pool[j] = pool[n]
+    return out

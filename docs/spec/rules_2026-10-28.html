@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FV7C97G5FR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FV7C97G5FR');
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Official Rules, No Limit: A Bot Building Tournament</title>
+<meta name="description" content="No Limit is a pokerbot building tournament for university students and ’25/’26 grads, hosted by Sequoia, Citadel Securities and OpenAI. 60 minutes to build, thousands of games, $100K grand prize. Regionals in Bay Area, Boston and Pittsburgh; finals in San Francisco Nov 15.">
+<!-- Link previews (Slack, iMessage, X, LinkedIn): og.png is 2400x1260, a 2x 1200x630 card. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pokerbot.sequoiacap.com/rules.html">
+<meta property="og:title" content="No Limit: A Bot Building Tournament">
+<meta property="og:description" content="Teams of 1 or 2 get 60 minutes to build a pokerbot from scratch. Thousands of games. Top teams fly to the SF finals for a $100K grand prize. Apply now.">
+<meta property="og:image" content="https://pokerbot.sequoiacap.com/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="No Limit: A Bot Building Tournament, hosted by Sequoia, Citadel Securities and OpenAI">
+<meta name="twitter:card" content="summary_large_image">
+<!-- A small pixel bot: SVG for most browsers, a 32px PNG for the rest. -->
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u2W0QkAIAgFW8H9h60BovKhkeY78CuoQ61sjSjpIP8KiMg2KJBfQNtkq4PNzRlG4JRqNOIKaFPsJTCVJIwAugG6viwJBdIIXLuWaQRQ8gnUfQn5G1rHb/dx/bkAKccAjhcT2w5HxUQAAAAASUVORK5CYII=">
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges"%3E%3Cpath fill="%23fff" d="M5 1h6v1h-6zM5 2h1v1h-1zM10 2h1v1h-1zM5 3h1v1h-1zM10 3h1v1h-1zM2 4h5v1h-5zM9 4h5v1h-5zM2 5h1v1h-1zM13 5h1v1h-1zM0 6h3v1h-3zM13 6h3v1h-3zM0 7h1v1h-1zM5 7h2v1h-2zM9 7h2v1h-2zM15 7h1v1h-1zM0 8h1v1h-1zM5 8h2v1h-2zM9 8h2v1h-2zM15 8h1v1h-1zM0 9h1v1h-1zM15 9h1v1h-1zM0 10h1v1h-1zM5 10h6v1h-6zM15 10h1v1h-1zM0 11h3v1h-3zM13 11h3v1h-3zM2 12h1v1h-1zM13 12h1v1h-1zM2 13h12v1h-12z"/%3E%3Cpath fill="%23111" d="M6 2h4v1h-4zM6 3h4v1h-4zM7 4h2v1h-2zM3 5h10v1h-10zM3 6h10v1h-10zM1 7h4v1h-4zM7 7h2v1h-2zM11 7h4v1h-4zM1 8h4v1h-4zM7 8h2v1h-2zM11 8h4v1h-4zM1 9h14v1h-14zM1 10h4v1h-4zM11 10h4v1h-4zM3 11h10v1h-10zM3 12h10v1h-10z"/%3E%3C/svg%3E'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+<style>
+  /* The landing page's look: a printed transcript, black on white, every line numbered. */
+  :root {
+    --ink: #111; --paper: #fff; --gutter: #8a8a8a; --muted: #595959; --warn: #ffc400;
+    --mono: "Source Code Pro", ui-monospace, Menlo, monospace;
+    --lh: 1.8;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: 15px; line-height: var(--lh); }
+  a { color: inherit; }
+  /* One weight throughout: nothing is bold, including what browsers bold by default. */
+  b, strong, h1, h2, h3 { font-weight: 400; }
+  [hidden] { display: none !important; }
+  .doc { counter-reset: ln; padding: 48px 0 calc(var(--lh) * 3em); }
+  .sheet { max-width: 80ch; margin: 0 auto; padding: 0 24px 0 64px; }
+  .l {
+    counter-increment: ln; position: relative; min-height: calc(var(--lh) * 1em);
+    display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: 2ch;
+  }
+  .l::before {
+    content: counter(ln); position: absolute; left: -5ch; width: 3.2ch;
+    text-align: right; font-size: 10px; color: var(--gutter); top: .55em;
+  }
+  .l[data-ln]::before { content: attr(data-ln); white-space: pre; line-height: var(--ln-lh); top: 0; }
+  .gap { margin-top: .5em; }
+  .c { justify-content: center; text-align: center; }
+  .divider > span { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; }
+  .kv { display: grid; grid-template-columns: 20ch 1fr; justify-content: start; }
+
+  /* The terms sit on white, like the application form. */
+  .terms { padding: calc(var(--lh) * 1em) 0; }
+  .terms h1, .terms h2, .terms h3 { font: inherit; margin: 0; }
+  .terms .lead > span, .terms .p > span { max-width: 64ch; }
+  /* The rules: clause number in a narrow column, text beside it. */
+  .clause { display: grid; grid-template-columns: 5ch 1fr; column-gap: 1ch; }
+  .clause > span:last-child { max-width: 64ch; }
+  /* Checkboxes stay real inputs; the brackets are drawn next to them. Fine print. */
+  .opt { display: grid; grid-template-columns: 4ch 1fr; column-gap: 1ch; cursor: pointer; font-size: 13px; }
+  .opt input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+  .opt .box::before { content: "[ ]"; white-space: pre; }
+  .opt input:checked + .box::before { content: "[X]"; }
+  .opt input:focus-visible + .box { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .opt:hover .txt { text-decoration: underline; }
+  .opt input[aria-invalid="true"] + .box { background: var(--warn); }
+  /* Error messages are not shown: the yellow box says it. They stay for screen readers,
+     read through each box's aria-describedby along with aria-invalid. */
+  .err { display: none !important; }
+  .err > * { grid-column: 2; }
+  .tag { background: var(--warn); color: var(--ink); padding: 0 .5ch; margin-right: 1ch; } /* errors: warm yellow behind black */
+  .apply {
+    display: inline-block; font: inherit; color: var(--paper); background: var(--ink);
+    border: 1px solid var(--ink); padding: 0 1.5ch; cursor: pointer; text-decoration: none;
+  }
+  .apply:hover { background: var(--paper); color: var(--ink); }
+  .apply:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  #done:focus { outline: none; }
+
+  @media (max-width: 680px) {
+    body { font-size: 14px; }
+    .doc { padding-top: 28px; }
+    .sheet { padding: 0 16px 0 36px; }
+    .l::before { left: -4ch; }
+    .kv { grid-template-columns: 14ch 1fr; column-gap: 1ch; }
+    .opt { font-size: 13px; }
+    .err { grid-template-columns: 5ch 1fr; }
+  }
+  @media (forced-colors: active) {
+    .apply { forced-color-adjust: none; background: CanvasText; color: Canvas; }
+    .tag { forced-color-adjust: none; background: Mark; color: MarkText; }
+  }
+</style>
+</head>
+<body>
+<main class="doc">
+<div class="sheet">
+
+  <div class="l"><span>DEPARTMENT OF ALGORITHMIC PLAY</span></div>
+  <div class="l"><span>2800 SAND HILL ROAD</span></div>
+  <div class="l"><span>MENLO PARK, CA 94025</span></div>
+  <div class="l"></div>
+  <div class="l divider" aria-hidden="true"><span>================================================================================================================================================</span></div>
+  <div class="l"></div>
+
+  <section class="terms" aria-labelledby="rules-title">
+    <div class="l c gap"><h1 id="rules-title">NO LIMIT: OFFICIAL RULES</h1></div>
+    <div class="l"></div>
+    <div class="l lead"><span>Every participant accepts these rules when they register for No Limit: A Bot Building Tournament. Teammates register from the link in their email.</span></div>
+    <div class="l"></div>
+      <div class="l c gap"><h2 id="rules">OFFICIAL RULES FOR NO LIMIT: A BOT BUILDING TOURNAMENT ORGANIZED BY SEQUOIA CAPITAL OPERATIONS, LLC AND HOSTED BY OPENAI AND CITADEL SECURITIES</h2></div>
+      <div class="l"></div>
+      <div class="l p"><span>Sequoia Capital Operations, LLC (the "Organizer") organizes and administers the bot building competition described in these rules (the "Competition"). OpenAI OpCo, LLC ("OpenAI") and Citadel Securities are hosts (together, the "Hosts"). The Organizer is solely responsible for Competition administration, the competition platform, eligibility verification, scoring, winner selection, prize payment, tax reporting and withholding, and compliance with laws applicable to the events. The Hosts are not responsible for the Organizer's acts or omissions in performing those functions. By registering, each participant agrees to these rules as a binding agreement with the Organizer. The Hosts and their respective affiliates, officers, directors, employees, and agents are express third-party beneficiaries of the licenses, releases, indemnities, disclaimers, and limitations of liability that protect them under these rules. The Organizer, Hosts, and their respective affiliates, officers, directors, employees, and agents are collectively the "Competition Entities".</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>1. ELIGIBILITY</h3></div>
+      <div class="l clause"><span class="num">1.1</span><span>Participation is open to currently enrolled students at any university in the United States and graduates of U.S. universities from the class of 2025 or 2026.</span></div>
+      <div class="l clause"><span class="num">1.2</span><span>All participants must be at least 18 years old.</span></div>
+      <div class="l clause"><span class="num">1.3</span><span>Gamemasters, judges, employees, officers, directors, and contractors of the Organizer, the Hosts, and their respective affiliates, and their immediate family members (spouse, parents, siblings, and children) and household members may not compete.</span></div>
+      <div class="l clause"><span class="num">1.4</span><span>Teams may consist of one or two people. Each participant may compete in only one regional event. Teammates do not have to attend the same school.</span></div>
+      <div class="l clause"><span class="num">1.5</span><span>Participation is free. Participants contribute nothing toward the prize pool. No purchase of OpenAI services or any other product or service is necessary to enter or win.</span></div>
+      <div class="l clause"><span class="num">1.6</span><span>Participants must be legally eligible to participate and receive prizes under applicable law and must not be subject to sanctions or export restrictions that prohibit participation or receipt of a prize. Any use of OpenAI services must occur from a country or territory supported for the applicable service as set forth <a href="https://platform.openai.com/docs/supported-countries">here</a>. The Organizer may require proof of age, university affiliation, identity, and eligibility. Participants acting for an employer, university, or other entity must have all necessary permissions to participate, submit their code, grant the rights in these rules, and receive prizes. Void where prohibited by law.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>2. REGISTRATION AND SCHEDULE</h3></div>
+      <div class="l clause"><span class="num">2.1</span><span>Each participant must register online by each deadline, including both members of a two-person team. Before completing registration, each participant must be given access to and affirmatively accept these rules, acknowledge the <a href="privacy.html">privacy notice</a> identified in Section 8.2, and make any applicable photo and video election under Section 8.3.</span></div>
+      <div class="l clause"><span class="num">2.2</span><span>Each regional will accept a limited number of teams. Places are offered on a rolling basis. All participants must register at <a href="index.html">pokerbot.sequoiacap.com</a></span></div>
+      <div class="l clause"><span class="num">2.3</span><span>Participants must attend their regional in person for the full event. Check-in begins at 5:30 PM, and the regional event runs from 6:00-9:00 PM local time.</span></div>
+      <div class="l clause"><span class="num">2.4</span><span>Events will take place on the following dates in 2026:</span></div>
+      <div class="l clause"><span class="num"></span><span>- Friday, November 6 - Menlo Park, CA (deadline to register - Tuesday, November 3 at 11:59 PM PT)</span></div>
+      <div class="l clause"><span class="num"></span><span>- Monday, November 9 - Cambridge, MA (deadline to register - Friday, November 6 at 11:59 PM ET)</span></div>
+      <div class="l clause"><span class="num"></span><span>- Thursday, November 12 - Pittsburgh, PA (deadline to register - Monday, November 9 at 11:59 PM ET)</span></div>
+      <div class="l clause"><span class="num"></span><span>- Sunday, November 15 - Finals in San Francisco, CA (Attendance is by invitation only, with invitations extended to the top-performing teams at each regional event.)</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>3. POKERBOT COMPETITION FORMAT</h3></div>
+      <div class="l clause"><span class="num">3.1</span><span>These competition rules apply to both the regionals and the Finals.</span></div>
+      <div class="l clause"><span class="num">3.2</span><span>The poker variant will be revealed on the day of each event at the start of the build phase. It will remain confidential until that announcement.</span></div>
+      <div class="l clause"><span class="num">3.3</span><span>Teams have 60 minutes to build a Python bot that implements the provided Agent interface. Teams receive a starter kit containing an agent template, local simulator, Independent Chip Model (ICM) calculator, payout structure, and blind schedule.</span></div>
+      <div class="l clause"><span class="num">3.4</span><span>Teams may use Astra and Codex to write, debug, and refine their bots during the build phase. Publicly available documentation is permitted.</span></div>
+      <div class="l clause"><span class="num">3.5</span><span>Each team may submit one bot every five minutes. The team's most recently accepted submission becomes its active bot.</span></div>
+      <div class="l clause"><span class="num">3.6</span><span>Submitted bots run in isolated sandboxes without network access. They cannot call OpenAI tools, external APIs, or any other outside service to make gameplay decisions.</span></div>
+      <div class="l clause"><span class="num">3.7</span><span>Each bot must return a decision within one millisecond. The maximum file size is 100mb. If a bot encounters an error or exceeds the time limit, it automatically folds, or checks if checking is available.</span></div>
+      <div class="l clause"><span class="num">3.8</span><span>Bot state resets at the start of each table. Opponents are anonymized so bots cannot identify specific teams.</span></div>
+      <div class="l clause"><span class="num">3.9</span><span>Bots compete exclusively against other bots. No humans play in the bot competition. Chips and points exist only within the simulation and have no cash value.</span></div>
+      <div class="l clause"><span class="num">3.10</span><span>No real money is bet by the bots. Participants, spectators, hosts, and all other attendees may not bet or wager on competition outcomes.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>4. SCORING</h3></div>
+      <div class="l clause"><span class="num">4.1</span><span>There are six scored tournaments, labeled T1-T6. The first begins at the end of the 60-minute build phase, with subsequent tournaments starting 20 minutes apart.</span></div>
+      <div class="l clause"><span class="num">4.2</span><span>Teams may continue editing and submitting bots after the build phase. At the start of each scored tournament, each team's active bot is frozen for that tournament. Any submissions accepted afterward apply to the next scored tournament.</span></div>
+      <div class="l clause"><span class="num">4.3</span><span>Each scored tournament consists of 10,000 simulated eight-bot sit-and-gos. In each iteration, bots are randomly assigned to tables.</span></div>
+      <div class="l clause"><span class="num">4.4</span><span>Each table plays until one bot holds all the chips or 200 hands have been played. Each bot starts with 2,000 chips. Blinds start at 10/20 and increase every 25 hands.</span></div>
+      <div class="l clause"><span class="num">4.5</span><span>Points are awarded based on each bot's finishing position at its table. The point distribution may vary by poker variant and will be announced at the start of the build phase. An eliminated bot receives the points assigned to its finishing position. If a table reaches the 200-hand limit, the remaining points are allocated among the surviving bots using the Independent Chip Model (ICM).</span></div>
+      <div class="l clause"><span class="num">4.6</span><span>If the number of competing bots is not divisible by eight, empty seats are filled with randomly selected copies of submitted bots. These filler bots earn no points.</span></div>
+      <div class="l clause"><span class="num">4.7</span><span>A team's score for each scored tournament is its average points per table across the 10,000 iterations. Later tournaments carry greater weight: Final score = (T1 score × 1) + (T2 score × 2) + (T3 score × 3) + (T4 score × 4) + (T5 score × 5) + (T6 score × 6).</span></div>
+      <div class="l clause"><span class="num">4.8</span><span>Ties are resolved by a tie-breaker challenge to be determined by the Organizer. The Organizer will announce the tie-breaker challenge and its objective skill-based scoring criteria.</span></div>
+      <div class="l clause"><span class="num">4.9</span><span>Competition rankings and prizes depend solely on bot performance under this scoring system, subject to the tie-breaking rule.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>5. PRIZES AND ADVANCEMENT</h3></div>
+      <div class="l clause"><span class="num">5.1</span><span>The top 5 teams at each regional receive $5,000 per team and advance to the Finals. We'll also select up to five additional wildcard teams across the regional games based on their scores.</span></div>
+      <div class="l clause"><span class="num">5.2</span><span>The Finals follow the same competition format using a different poker variant. Finals prizes are:</span></div>
+      <div class="l clause"><span class="num"></span><span>- First place: $100,000</span></div>
+      <div class="l clause"><span class="num"></span><span>- Second place: $50,000</span></div>
+      <div class="l clause"><span class="num"></span><span>- Third place: $25,000</span></div>
+      <div class="l clause"><span class="num">5.3</span><span>Prizes are awarded per team and split equally between teammates. Winners must complete the required tax documentation. Prizes will be reported as required by law. All prizes will be distributed by Sequoia Capital Operations, LLC. Winners are responsible for all taxes on their prizes. Payments are subject to applicable withholding and receipt of all required eligibility certifications, tax forms, releases, and other prize acceptance documents. Hosts have no obligation to pay prizes or handle the Organizer's or winner's tax obligations.</span></div>
+      <div class="l clause"><span class="num">5.4</span><span>Prizes will be paid within 30 days after the Organizer verifies the winner's eligibility and compliance with these rules and receives all required prize acceptance documents. Potential winners must return requested documents within 14 days after notification. Failure to do so, ineligibility, or a material rule violation may result in forfeiture, in which case the Organizer may select the next highest-ranked eligible team. Prizes and advancement remain subject to verification, including code review reasonably necessary to verify compliance.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>6. CONDUCT AND INTEGRITY</h3></div>
+      <div class="l clause"><span class="num">6.1</span><span>Teams will be disqualified for colluding with other teams, copying another team's code, interfering with the platform, or using the submission endpoint in unintended ways. The Organizer may also disqualify participants for cheating, fraud, harassment, malicious code, security abuse, material misrepresentations, or other material violations of these rules, applicable law, or applicable service terms, including violations discovered after an event or an initial announcement of results.</span></div>
+      <div class="l clause"><span class="num">6.2</span><span>The Organizer's technical lead has final authority over platform and timing decisions, including whether to delay a scored tournament. The events lead has final authority over rules and conduct decisions.</span></div>
+      <div class="l clause"><span class="num">6.3</span><span>Participants must raise any dispute with a Gamemaster before the next scored tournament begins. Disputes concerning T6 must be raised within 5 minutes after its results are published. Hand logs are retained to support dispute resolution. These deadlines apply to requests for review of tournament results and do not limit the Organizer's ability to investigate misconduct, verify eligibility, correct errors, or enforce these rules after the deadlines.</span></div>
+      <div class="l clause"><span class="num">6.4</span><span>Participants may not publicly share the poker variant or other unreleased event details before the event ends.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>7. USE OF AI TOOLS</h3></div>
+      <div class="l clause"><span class="num">7.1</span><span>AI tools may assist teams with writing, debugging, and refining bot code as described in Section 3. They may not make live gameplay decisions for submitted bots.</span></div>
+      <div class="l clause"><span class="num">7.2</span><span>The Organizer may use an AI model after hands have been played to select or rank hands for replay on spectator screens. This use does not affect gameplay, scoring, rankings, or prizes.</span></div>
+      <div class="l clause"><span class="num">7.3</span><span>Using OpenAI tools is optional at every stage of the tournament.</span></div>
+      <div class="l clause"><span class="num">7.4</span><span>Use of OpenAI services is subject to the applicable OpenAI agreement and Usage Policies, available at <a href="https://openai.com/policies/">https://openai.com/policies/</a>, and any applicable event-specific access terms. These rules do not amend those terms or authorize any otherwise prohibited use. Participants must review and test AI-generated code and remain responsible for their submissions. OpenAI does not guarantee that its services will be continuously available, that outputs will be accurate or error-free, or that using its services will produce any particular Competition result. Nothing in these rules grants rights in OpenAI services beyond those granted under the applicable OpenAI agreement.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>8. CODE, DATA, AND MEDIA</h3></div>
+      <div class="l clause"><span class="num">8.1</span><span>Participants retain ownership of their bot code, subject to applicable third-party rights. They grant the Organizer, the Hosts, and their respective affiliates a nonexclusive, worldwide, royalty-free license to access, reproduce, execute, and evaluate submitted code solely to administer, support, troubleshoot, judge, and verify the Competition. They also grant those entities permission to reproduce, display, distribute, and use hand logs and anonymized results for Competition replays, publicity, judging, and post-event analysis. Participants must provide code and documentation reasonably requested by the Organizer to verify compliance. Submissions are provided without an obligation of confidentiality; participants must not submit materials they are not authorized to disclose. No ownership transfer or general-purpose license to commercialize participant code is required under these rules.</span></div>
+      <div class="l clause"><span class="num">8.2</span><span>The Organizer will collect and use registration data to administer the event as described in the privacy notice made available during registration at <a href="privacy.html">pokerbot.sequoiacap.com/privacy.html</a>. Registration data will be shared with event partners only if the participant separately opts in during registration. Any Host receiving participant data will process it in accordance with its applicable privacy notice, including <a href="https://openai.com/policies/privacy-policy">openai.com/policies/privacy-policy</a> for OpenAI. Participation is not conditioned on consent to Host marketing or recruiting communications.</span></div>
+      <div class="l clause"><span class="num">8.3</span><span>Participants acknowledge that photos and videos may be taken during the event and grant the Organizer and Hosts (Sequoia Capital Operations, LLC, OpenAI, and Citadel Securities) and their affiliates the sublicensable right to use those photos and videos in internal and external marketing and promotional materials, unless they notify the Organizer and Hosts that they wish to opt out. The Organizer will provide a clearly identified contact and a reasonable process for making and implementing a photo and video opt-out before recording begins. Participants also permit the Organizer and Hosts to publish their names, team names, rankings, and results in connection with the Competition and its publicity, without additional compensation, except where prohibited by law.</span></div>
+      <div class="l clause"><span class="num">8.4</span><span>Each participant represents and warrants that they have all rights, licenses, consents, and permissions necessary to submit their code and other materials, participate in the Competition, and grant the rights in these rules. Submissions and the uses authorized by these rules must not infringe third-party intellectual property, privacy, publicity, or other rights, breach confidentiality obligations, or violate applicable law. Participants must comply with applicable third-party software and data licenses. Submissions must not contain personal information, third-party confidential information, malware, hardcoded credentials, plaintext passwords, or code designed to compromise the platform or other submissions.</span></div>
+      <div class="l"></div>
+      <div class="l gap"><h3>9. GENERAL</h3></div>
+      <div class="l clause"><span class="num">9.1</span><span>The Organizer may amend these rules before the build phase begins. Any changes will be announced to all participants. After the build phase begins, the Organizer may make changes reasonably necessary to address legal requirements, security incidents, fraud, or technical failures, subject to Section 9.2. Material changes will be promptly communicated to affected participants and applied fairly.</span></div>
+      <div class="l clause"><span class="num">9.2</span><span>The Organizer may cancel, postpone, suspend, or modify an event if it cannot be conducted fairly, securely, or lawfully as planned, including because of fraud, tampering, security incidents, technical failures, legal or regulatory requirements, or circumstances outside its reasonable control. The Organizer will notify affected participants and, to the extent practicable and lawful, determine any awards based on valid results obtained before the disruption or a fairly administered rescheduled competition. No Host is required to fund substitute prizes, travel, or other expenses arising from such action.</span></div>
+      <div class="l clause"><span class="num">9.3</span><span>To the maximum extent permitted by law, each participant agrees to defend, indemnify, and hold harmless the Competition Entities from third-party claims, liabilities, losses, damages, and reasonable costs and attorneys' fees arising from the participant's submission or other materials, infringement or violation of third-party rights, material misrepresentations, violation of these rules or applicable law, or misconduct in connection with the Competition. This obligation does not apply to the extent a claim results from the indemnified entity's gross negligence, willful misconduct, or violation of law.</span></div>
+      <div class="l clause"><span class="num">9.4</span><span>To the maximum extent permitted by law, participants release the Competition Entities from claims arising from technical malfunctions, unavailable services, lost or incorrectly processed submissions, errors in scoring or prize announcements, and participation in the Competition or use of a prize. Competition materials and the competition platform are provided as available and without warranties of merchantability, fitness for a particular purpose, or noninfringement. Participants are responsible for their own equipment, expenses, and review and testing of code. No release or disclaimer applies to gross negligence, willful misconduct, or liability that cannot lawfully be excluded.</span></div>
+      <div class="l clause"><span class="num">9.5</span><span>To the maximum extent permitted by law, the Competition Entities will not be liable under these rules for indirect, incidental, special, consequential, exemplary, or punitive damages, including lost profits or lost opportunities. Each Host's aggregate liability arising out of the Competition or these rules will not exceed US$100. These limitations do not apply to fraud, gross negligence, willful misconduct, or liability that cannot lawfully be limited. Claims concerning use of OpenAI services remain governed by the applicable OpenAI agreement, including its warranties, disclaimers, limitations of liability, and dispute-resolution provisions.</span></div>
+      <div class="l clause"><span class="num">9.6</span><span>Except for claims governed by an applicable OpenAI agreement as stated in Section 9.5, these rules and disputes arising out of them are governed by California law, excluding conflict-of-laws principles, and subject to the exclusive jurisdiction of the state and federal courts located in San Francisco County, California. Mandatory rights and protections under applicable law are preserved. If a provision is unenforceable, the remaining provisions remain in effect.</span></div>
+      <div class="l clause"><span class="num">9.7</span><span>Participation, a submission, or receipt of a prize does not create an employment, agency, fiduciary, or confidential relationship with any Competition Entity or constitute an offer of employment. No participant may bind any Competition Entity or represent that their code or other materials are endorsed by any Host.</span></div>
+    <div class="l"></div>
+    <div class="l"><span><a href="index.html#apply">&larr; BACK TO THE APPLICATION</a></span></div>
+  </section>
+
+  <div class="l"></div>
+</div>
+</main>
+<script>
+// Line numbers. The printed transcript numbers every line, including the second line of a
+// wrapped entry, so each row gets one number per rendered line instead of one per row.
+// Without this script the CSS counter still numbers rows.
+(() => {
+  "use strict";
+  const doc = document.querySelector(".doc");
+  if (!doc) return;
+  let pending = 0;
+  function number() {
+    pending = 0;
+    // Read everything first, then write, so the page lays out once.
+    const plan = [];
+    let n = 0;
+    for (const row of doc.querySelectorAll(".l")) {
+      if (!row.getClientRects().length) { plan.push([row, null, 0]); continue; }
+      const lh = parseFloat(getComputedStyle(row).lineHeight) || 27;
+      const lines = Math.max(1, Math.round(row.getBoundingClientRect().height / lh));
+      const nums = [];
+      for (let i = 0; i < lines; i++) nums.push(++n);
+      plan.push([row, nums.join("\n"), lh]);
+    }
+    for (const [row, text, lh] of plan) {
+      if (text === null) { delete row.dataset.ln; continue; }
+      if (row.dataset.ln !== text) row.dataset.ln = text;
+      row.style.setProperty("--ln-lh", lh + "px");
+    }
+  }
+  const schedule = () => { if (!pending) pending = requestAnimationFrame(number); };
+
+  // Re-number when a row re-wraps (resize, late web font), when rows are shown or hidden
+  // (form errors, conditional fields), or when rows are added. The exhibits' frequent text
+  // updates do not change row heights, so they do not trigger this.
+  const ro = new ResizeObserver(schedule);
+  const watch = () => doc.querySelectorAll(".l").forEach(r => ro.observe(r));
+  const hasRow = node => node.nodeType === 1 && (node.matches(".l") || node.querySelector(".l"));
+  new MutationObserver(muts => {
+    for (const m of muts) {
+      if (m.type === "attributes" || [...m.addedNodes].some(hasRow) || [...m.removedNodes].some(hasRow)) {
+        watch(); schedule(); return;
+      }
+    }
+  }).observe(doc, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
+  watch();
+  if (document.fonts) document.fonts.ready.then(schedule);
+  schedule();
+})();
+</script>
+</body>
+</html>

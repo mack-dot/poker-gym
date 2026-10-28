@@ -10,9 +10,9 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Protocol, Sequence, runtime_checkable
+from typing import Protocol, runtime_checkable
 
-from .cards import card_str, parse_cards
+from .cards import card_str
 
 
 class ActionType(IntEnum):
@@ -72,9 +72,33 @@ class Observation:
         "history", "num_players", "live_players",
     )
 
-    def __init__(self, **kw):
-        for k in self.__slots__:
-            setattr(self, k, kw[k])
+    def __init__(self, hand_number, street, seat, button, small_blind, big_blind, ante,
+                 hole_cards, board, stacks, bets, committed, in_hand, all_in,
+                 pot, to_call, can_check, can_raise, min_raise_to, max_raise_to,
+                 history, num_players, live_players):
+        self.hand_number = hand_number
+        self.street = street
+        self.seat = seat
+        self.button = button
+        self.small_blind = small_blind
+        self.big_blind = big_blind
+        self.ante = ante
+        self.hole_cards = hole_cards
+        self.board = board
+        self.stacks = stacks
+        self.bets = bets
+        self.committed = committed
+        self.in_hand = in_hand
+        self.all_in = all_in
+        self.pot = pot
+        self.to_call = to_call
+        self.can_check = can_check
+        self.can_raise = can_raise
+        self.min_raise_to = min_raise_to
+        self.max_raise_to = max_raise_to
+        self.history = history
+        self.num_players = num_players
+        self.live_players = live_players
 
     # Convenience ---------------------------------------------------------
     @property

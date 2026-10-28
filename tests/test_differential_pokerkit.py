@@ -6,7 +6,6 @@ cross-checks betting legality, min/max raise amounts, side pots, showdown
 evaluation and odd-chip splitting against an independent implementation.
 """
 import random
-import warnings
 
 import pytest
 
@@ -90,7 +89,6 @@ def run_ours(stacks, hole, board, stream, blinds, mode):
     adapters = [AgentAdapter(PolicyAgent(policy), mode="off") for _ in range(n)]
     for p, ad in enumerate(adapters):
         ad.reset(TableInfo(p, n, stacks[p], "x", p))
-    table = [[s] for s in range(n)]
     board_str = " ".join(card_str(c) for c in board)
     sb_seat = 0 if n > 2 else 1  # heads-up: the button (seat n-1) posts the small blind
     deck = build_deck({p: " ".join(card_str(c) for c in hole[p]) for p in range(n)}, board_str, sb_seat, list(range(n)))

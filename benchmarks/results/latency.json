@@ -1,0 +1,78 @@
+{
+ "command": "benchmarks/bench_latency.py --tournaments 200 --out benchmarks/results/latency.json",
+ "tournaments": 200,
+ "sim_wall_s": 0.8613853749120608,
+ "sim_decisions": 112942,
+ "sim_us_per_decision_all_in": 7.626794061660505,
+ "in_simulation": {
+  "call": {
+   "n": 27094,
+   "p50_us": 0.125,
+   "p90_us": 0.166,
+   "p99_us": 0.209,
+   "p99_9_us": 0.708,
+   "max_us": 7.083,
+   "mean_us": 0.1212658522182033,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  },
+  "random": {
+   "n": 14417,
+   "p50_us": 0.292,
+   "p90_us": 1.375,
+   "p99_us": 2.5,
+   "p99_9_us": 6.917,
+   "max_us": 28.917,
+   "mean_us": 0.6233772629534577,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  },
+  "heuristic": {
+   "n": 71431,
+   "p50_us": 2.042,
+   "p90_us": 3.792,
+   "p99_us": 6.584,
+   "p99_9_us": 14.5,
+   "max_us": 227.583,
+   "mean_us": 2.4321069143649114,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  }
+ },
+ "isolated": {
+  "call": {
+   "n": 440,
+   "p50_us": 0.083,
+   "p90_us": 0.084,
+   "p99_us": 0.166,
+   "p99_9_us": 1.417,
+   "max_us": 1.417,
+   "mean_us": 0.08025227272727273,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  },
+  "random": {
+   "n": 432,
+   "p50_us": 0.167,
+   "p90_us": 0.875,
+   "p99_us": 1.042,
+   "p99_9_us": 2.333,
+   "max_us": 2.333,
+   "mean_us": 0.3549259259259259,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  },
+  "heuristic": {
+   "n": 2172,
+   "p50_us": 1.625,
+   "p90_us": 3.291,
+   "p99_us": 5.209,
+   "p99_9_us": 12.417,
+   "max_us": 73.75,
+   "mean_us": 2.0542136279926337,
+   "over_1ms": 0,
+   "over_1ms_frac": 0.0
+  }
+ },
+ "timer_overhead_ns": 42.0
+}

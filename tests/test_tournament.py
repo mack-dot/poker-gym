@@ -1,12 +1,11 @@
 import json
-import random
 
 import pytest
 
 from pokerlab.bots import CallBot, HeuristicBot, RandomBot
-from pokerlab.checks import InvariantError, check_tournament
+from pokerlab.checks import check_tournament
 from pokerlab.icm import brute_force_equities
-from pokerlab.rules import BASELINE_RULES, SYNTHETIC_PAYOUTS, BlindSchedule
+from pokerlab.rules import BASELINE_RULES, SYNTHETIC_PAYOUTS
 from pokerlab.tournament import assign_finishes, final_score, run_round, run_tournament
 from pokerlab.variants import VARIANTS
 

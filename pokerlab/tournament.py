@@ -111,7 +111,8 @@ def run_tournament(
         ad.reset(TableInfo(seat=s, num_players=n, starting_stack=rules.starting_stack,
                            rules_name=rules.name, seed=seat_seeds[s]))
     stacks = [rules.starting_stack] * n
-    button = rng.randrange(n) if button_start is None else button_start
+    drawn = rng.randrange(n)  # always drawn so the RNG stream does not depend on button_start
+    button = drawn if button_start is None else button_start
     bstart = button
     evaluator = rules.ranking.evaluator()
     payouts = rules.payouts

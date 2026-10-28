@@ -1,0 +1,52 @@
+{
+ "machine": {
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu": "Apple M1 Pro",
+  "cores_logical": 10,
+  "cores_physical": "10",
+  "perf_cores": "8",
+  "eff_cores": "2",
+  "memory_bytes": "17179869184",
+  "python": "3.12.12",
+  "pokerlab": "0.1.0"
+ },
+ "command": "benchmarks/bench_throughput.py --tournaments 10000 --workers 8 --mix call heuristic --out benchmarks/results/throughput_10k_worst.json",
+ "warmup_tournaments": 5,
+ "results": [
+  {
+   "mix": "call",
+   "variant": "baseline",
+   "tournaments": 10000,
+   "workers": 8,
+   "base_seed": 1,
+   "deadline_mode": "enforce",
+   "hands": 1999190,
+   "decisions": 48391203,
+   "wall_s": 21.06672245892696,
+   "cpu_s": 162.00297899999998,
+   "hands_per_s": 94898.00816893799,
+   "tournaments_per_s": 474.6822871709942,
+   "decisions_per_s": 2297044.6918995874,
+   "hands_per_tournament": 199.919,
+   "max_rss_bytes_per_process": 28327936
+  },
+  {
+   "mix": "heuristic",
+   "variant": "baseline",
+   "tournaments": 10000,
+   "workers": 8,
+   "base_seed": 1,
+   "deadline_mode": "enforce",
+   "hands": 1979698,
+   "decisions": 10370993,
+   "wall_s": 9.8074476250913,
+   "cpu_s": 76.275367,
+   "hands_per_s": 201856.5967087253,
+   "tournaments_per_s": 1019.6332809788427,
+   "decisions_per_s": 1057460.961959861,
+   "hands_per_tournament": 197.9698,
+   "max_rss_bytes_per_process": 27590656
+  }
+ ]
+}

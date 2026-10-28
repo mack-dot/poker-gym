@@ -5,7 +5,7 @@ import pytest
 
 from pokerlab.cards import card_str, parse_cards, fresh_deck
 from pokerlab.evaluator import (
-    CATEGORY_NAMES, FLUSH, FULL_HOUSE, HIGH_CARD, PAIR, QUADS, STRAIGHT, STRAIGHT_FLUSH,
+    FLUSH, FULL_HOUSE, HIGH_CARD, PAIR, QUADS, STRAIGHT, STRAIGHT_FLUSH,
     TRIPS, TWO_PAIR, Evaluator, STANDARD_EVALUATOR as E, evaluate,
 )
 
