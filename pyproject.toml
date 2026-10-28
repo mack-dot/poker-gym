@@ -1,0 +1,21 @@
+[project]
+name = "pokerlab"
+version = "0.1.0"
+description = "Fast, verified eight-player poker tournament simulator for No Limit rehearsal"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pokerkit==0.7.7"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["pokerlab*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: long-running exhaustive checks"]
+addopts = "-q"
