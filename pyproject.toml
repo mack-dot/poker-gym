@@ -1,9 +1,11 @@
 [project]
 name = "pokergym"
 version = "0.1.0"
-description = "Poker Gym: fast, verified eight-player poker tournament simulator for No Limit rehearsal"
+description = "Poker Gym: unofficial practice simulator for eight-player No Limit tournament rehearsal"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.11"
+authors = [{ name = "Mack Ianni" }]
 dependencies = []
 
 [project.optional-dependencies]

@@ -1,12 +1,45 @@
-# Poker Gym — fast, verified eight-player tournament simulator and practice gym
+# Poker Gym — unofficial practice simulator
 
-Rehearsal simulator for *No Limit: A Bot Building Tournament* (Sequoia ×
-Citadel Securities × OpenAI). Pure Python, no dependencies at runtime.
-Python package: `pokergym`; repo: `poker-gym`.
+Fast, verified eight-player tournament simulator for *No Limit: A Bot
+Building Tournament* (Sequoia × Citadel Securities × OpenAI).
 
-Official rules: `docs/spec/official_rules_v1.md` (source URL, retrieval date,
-raw HTML copy). Anything the organizer has not published is labelled
-**SYNTHETIC** in code and docs.
+**This is not Sequoia's official starter kit.** It is an independent
+rehearsal tool. The official kit, secret variant, payouts, and harness
+arrive only on tournament day. Anything the organizer has not published is
+labelled **SYNTHETIC** in code and docs.
+
+Pure Python, MIT licensed, no runtime dependencies. Package: `pokergym`.
+Official rules snapshot: `docs/spec/official_rules_v1.md`.
+
+## Quick start
+
+```
+git clone https://github.com/mack-dot/poker-gym.git
+cd poker-gym
+python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+Run one eight-player sit-and-go, check invariants, and save the record:
+
+```
+python -m pokergym.cli run --seed 1 --verify --out runs/baseline_seed1.json
+```
+
+Copy the starter bot, edit `act()`, then measure it against the sparring lineup:
+
+```
+cp examples/my_bot.py my_bot.py
+python -m pokergym.cli eval --bot my_bot.py:MyBot --vs sparring --tables 200 --workers 4 --baseline tag
+```
+
+`eval` seats your bot in a random seat, reports points per table with a 95%
+CI, finish distribution, deadline misses, and a paired comparison against
+`tag` on the same seats. Raise `--tables` once the bot is legal.
+
+```
+python -m pytest -m "not slow"     # correctness suite, ~2 min
+```
 
 ## Practice (the gym)
 
@@ -83,10 +116,12 @@ exceeded the 1 ms deadline (GC pause). See `docs/benchmarks.md`.
 
 ## Setup
 
+`pip install -e ".[dev]"` (see Quick start) is enough. `pokerkit` is a
+test-only oracle, not a runtime dependency. If you use `uv`:
+
 ```
-cd /Users/mackianni/poker-gym
 uv venv --python 3.12 .venv && source .venv/bin/activate
-uv pip install -e . pytest pokerkit==0.7.7     # pokerkit is only used as a test oracle
+uv pip install -e ".[dev]"
 ```
 
 ## Run a tournament
@@ -166,3 +201,12 @@ docs/            spec, engine evaluation, variants, benchmarks, fidelity, gym, 6
 Bots talk only to `pokergym.agent`. Rules are data in `pokergym.rules`.
 Scoring is separate from the engine. See `docs/fidelity.md` for the parity
 plan once the starter kit is available.
+
+## License
+
+MIT. See `LICENSE`.
+
+`docs/spec/rules_2026-10-28.html` is a retrieved copy of Sequoia's published
+rules page and is not covered by this license. Tournament names and
+organizer marks belong to their owners. This project is unaffiliated with
+Sequoia, Citadel Securities, and OpenAI.
