@@ -16,6 +16,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 include = ["pokergym*"]
 
+[tool.setuptools.package-data]
+pokergym = ["data/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["slow: long-running exhaustive checks"]

@@ -27,7 +27,8 @@ from pokergym.bots import BOT_REGISTRY  # noqa: E402
 from pokergym.rules import BASELINE_RULES  # noqa: E402
 from pokergym.tournament import run_tournament  # noqa: E402
 
-MIX = ["call", "random", "heuristic", "random", "heuristic", "call", "random", "heuristic"]
+# One of every registered bot (fixtures + sparring partners).
+MIX = ["tag", "lag", "shortstack", "icm", "adaptive", "heuristic", "random", "call"]
 
 
 def pct(xs, p):

@@ -46,6 +46,25 @@ def test_properties():
         assert abs(sum(P[i][p] for i in range(3)) - 1) < 1e-12
 
 
+def test_single_player_subset_dp_matches_full_recursion():
+    from pokergym.icm import icm_equity_for, place_probabilities_for
+
+    rng = random.Random(9)
+    for n in (2, 3, 4, 5, 6, 8):
+        for _ in range(4):
+            stacks = [rng.randint(0, 5000) for _ in range(n)]
+            if sum(stacks) == 0:
+                stacks[0] = 1
+            pay = sorted((rng.random() * 100 for _ in range(n)), reverse=True)
+            full = place_probabilities(stacks)
+            eq = icm_equities(stacks, pay)
+            for me in range(n):
+                probs = place_probabilities_for(stacks, me)
+                for p in range(n):
+                    assert abs(probs[p] - full[me][p]) < 1e-9
+                assert abs(icm_equity_for(stacks, pay, me) - eq[me]) < 1e-9
+
+
 def test_fewer_payouts_than_players():
     eq = icm_equities([1000, 1000, 1000, 1000], [100])
     assert all(abs(x - 25) < 1e-9 for x in eq)

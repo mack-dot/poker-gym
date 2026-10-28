@@ -80,6 +80,7 @@ between runs. Budget for that variance when comparing submissions.
 4. Deadline semantics and the hardware the sandbox runs on (3.7).
 5. Whether the kit's "local simulator" exposes seeds/decks so that hand-level parity can be checked, or only aggregate results.
 6. How tables are formed when the number of entrants is large (random assignment per iteration is confirmed; seat order within a table is not).
+7. What a bot can see of other players' actions (3.8 confirms anonymized opponents and per-table state). Our rehearsal `Observation` exposes the current hand's actions only; a bot that folds does not see the rest of the hand. If the kit exposes complete hand logs or showdown cards, `stats.OpponentTracker` can ingest them (`ingest_record`) and the adaptive style gets much stronger. Whether the kit passes the payout schedule to the bot is also unknown; the `icm` sparring bot uses the SYNTHETIC schedule.
 
 ## Parity plan for the starter kit (Step 7)
 

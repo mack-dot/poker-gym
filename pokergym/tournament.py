@@ -28,6 +28,7 @@ class TournamentResult:
     hands: list[HandRecord] = field(default_factory=list)
     record_hash: str = ""
     button_start: int = 0
+    elimination_hands: list[int] = field(default_factory=list)  # hand number of each elimination
 
     def to_dict(self, include_hands: bool = True) -> dict:
         d = {
@@ -41,6 +42,7 @@ class TournamentResult:
             "icm_applied": self.icm_applied,
             "icm_survivors": self.icm_survivors,
             "elimination_order": self.elimination_order,
+            "elimination_hands": self.elimination_hands,
             "agent_stats": self.agent_stats,
             "record_hash": self.record_hash,
         }
@@ -120,6 +122,7 @@ def run_tournament(
     positions: list[float] = [0.0] * n
     points: list[float] = [0.0] * n
     elimination_order: list[int] = []
+    elimination_hands: list[int] = []
     next_position = n  # worst open finishing position
     hands: list[HandRecord] = []
     hands_played = 0
@@ -139,6 +142,7 @@ def run_tournament(
                 positions[s] = pos
                 points[s] = pts
                 elimination_order.append(s)
+                elimination_hands.append(hand_number)
             next_position -= len(busted)
         # Move the button to the next player with chips.
         b = (button + 1) % n
@@ -167,7 +171,7 @@ def run_tournament(
         seed=seed, rules_name=rules.name, hands_played=hands_played, final_stacks=list(stacks),
         positions=positions, points=points, icm_applied=icm_applied, icm_survivors=survivors,
         elimination_order=elimination_order, agent_stats=[a.stats() for a in adapters],
-        hands=hands, button_start=bstart,
+        hands=hands, button_start=bstart, elimination_hands=elimination_hands,
     )
     result.record_hash = _hash_hands(hands, result.final_stacks, result.points) if keep_hands else ""
     if record_latency:

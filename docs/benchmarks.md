@@ -95,6 +95,44 @@ why the default deadline mode records instead of enforcing: enforcing would
 turn a GC pause into a changed game and an unreproducible record. For a real
 submission, the bot should avoid allocation and large tables in `act()`.
 
+### Sparring bots (added with the gym)
+
+Same harness, `MIX` = one of every registered bot, 600 tournaments. Measured on
+the same laptop but under heavy background load (load average 12–15: a
+browser, a VM, Docker), which matters for the in-sim tail. Results in
+`benchmarks/results/latency.json`.
+
+| bot | isolated p50 | isolated p99 | isolated p99.9 | isolated max | in-sim p99.9 | in-sim > 1 ms |
+|---|---:|---:|---:|---:|---:|---:|
+| tag | 5.6 µs | 25.8 µs | 117.8 µs | 134 µs | 78 µs | 5 / 69,426 (0.007%) |
+| lag | 5.8 µs | 15.5 µs | 63.2 µs | 117 µs | 70 µs | 3 / 66,276 (0.005%) |
+| shortstack | 5.1 µs | 14.2 µs | 40.5 µs | 155 µs | 72 µs | 1 / 75,489 (0.001%) |
+| icm | 6.3 µs | 36.8 µs | 57.2 µs | 75 µs | 111 µs | 10 / 69,174 (0.014%) |
+| adaptive | 8.8 µs | 19.8 µs | 39.6 µs | 56 µs | 100 µs | 1 / 68,436 (0.001%) |
+| heuristic | 1.9 µs | 5.8 µs | 35.3 µs | 592 µs | 28 µs | 0 / 68,970 (0.000%) |
+
+Isolated (bot-only) cost is under 160 µs at the maximum for every sparring
+bot, so none of them is close to the deadline on its own. (One earlier run
+showed 7 isolated misses for `adaptive` with a 6.6 ms maximum; the next run
+of the same code showed a 56 µs maximum. That is a preemption burst, see
+below.) The `icm` bot was
+the slow one before two fixes: its ICM premium is now computed once per hand
+(it depends only on start-of-hand stacks) and uses a subset-DP for one
+player's finishing probabilities (`icm.place_probabilities_for`, ~23 µs for
+five players instead of ~120 µs for the full recursion).
+
+The in-sim > 1 ms events are **not** the bots and **not** the garbage
+collector: 300 tournaments were re-run with the default GC, with
+`gc.freeze()` + high thresholds, and with `gc.disable()`, and the miss rate
+was 0.022%, 0.027%, 0.027% respectively with worst cases of 18–51 ms. The
+fixture bots, re-measured in the same session, missed at the same rate
+(0.005–0.014%) although they missed once in 214,293 calls in the quiet P0
+session. The misses are OS preemption of the measuring process on a busy
+machine. Consequences: (1) compare bots on the `isolated` column, (2) run
+latency checks with `--workers 1` on a quiet machine, (3) the organizer's
+enforcement on their hardware will still produce some fallback actions that no
+bot can prevent; `deadline_mode="enforce"` shows how a bot copes with that.
+
 ## What was optimized (and what was not)
 
 Profiling (`cProfile`, 20 mixed tournaments) before optimization showed:
