@@ -1,11 +1,11 @@
 """Variant verification: behaviour changes exactly where the spec says, and
 nowhere else; invariants hold; full tournaments run; replays are seeded."""
-from pokerlab.bots import CallBot, HeuristicBot, RandomBot
-from pokerlab.checks import check_tournament
-from pokerlab.evaluator import FLUSH, FULL_HOUSE
-from pokerlab.tournament import run_tournament
-from pokerlab.variants import VARIANT_A_FLUSH_BEATS_FULL_HOUSE, VARIANT_B_POT_LIMIT, VARIANTS
-from pokerlab.rules import BASELINE_RULES
+from pokergym.bots import CallBot, HeuristicBot, RandomBot
+from pokergym.checks import check_tournament
+from pokergym.evaluator import FLUSH, FULL_HOUSE
+from pokergym.tournament import run_tournament
+from pokergym.variants import VARIANT_A_FLUSH_BEATS_FULL_HOUSE, VARIANT_B_POT_LIMIT, VARIANTS
+from pokergym.rules import BASELINE_RULES
 
 
 def mixed():

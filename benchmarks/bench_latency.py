@@ -22,10 +22,10 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from pokerlab.agent import TableInfo  # noqa: E402
-from pokerlab.bots import BOT_REGISTRY  # noqa: E402
-from pokerlab.rules import BASELINE_RULES  # noqa: E402
-from pokerlab.tournament import run_tournament  # noqa: E402
+from pokergym.agent import TableInfo  # noqa: E402
+from pokergym.bots import BOT_REGISTRY  # noqa: E402
+from pokergym.rules import BASELINE_RULES  # noqa: E402
+from pokergym.tournament import run_tournament  # noqa: E402
 
 MIX = ["call", "random", "heuristic", "random", "heuristic", "call", "random", "heuristic"]
 
@@ -65,6 +65,7 @@ class Recorder:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tournaments", type=int, default=200)
+    ap.add_argument("--repeats", type=int, default=3, help="independent tournament batches; latencies are pooled")
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
@@ -77,12 +78,13 @@ def main():
     recorders = {n: Recorder(BOT_REGISTRY[n]()) for n in BOT_REGISTRY}
     total_dec = 0
     t0 = time.perf_counter()
-    for i in range(a.tournaments):
-        bots = [BOT_REGISTRY[n]() for n in MIX]
-        r = run_tournament(bots, rules=rules, seed=a.seed + i, keep_hands=False, record_latency=True)
-        for name, st in zip(MIX, r.agent_stats):
-            in_sim[name].extend(st["latencies_ns"])
-            total_dec += st["calls"]
+    for rep in range(a.repeats):
+        for i in range(a.tournaments):
+            bots = [BOT_REGISTRY[n]() for n in MIX]
+            r = run_tournament(bots, rules=rules, seed=a.seed + i, keep_hands=False, record_latency=True)
+            for name, st in zip(MIX, r.agent_stats):
+                in_sim[name].extend(st["latencies_ns"])
+                total_dec += st["calls"]
     sim_wall = time.perf_counter() - t0
     # capture observations for isolated replay (separate, untimed run)
     for name, rec in recorders.items():
@@ -110,6 +112,7 @@ def main():
     out = {
         "command": " ".join(sys.argv),
         "tournaments": a.tournaments,
+        "repeats": a.repeats,
         "sim_wall_s": sim_wall,
         "sim_decisions": total_dec,
         "sim_us_per_decision_all_in": sim_wall / total_dec * 1e6,

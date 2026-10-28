@@ -128,9 +128,14 @@ class GameRules:
     betting: BettingRules = field(default_factory=BettingRules)
     ranking: HandRanking = field(default_factory=HandRanking)
     decision_deadline_ms: float = CONFIRMED_DECISION_DEADLINE_MS
-    # "enforce": apply check/fold fallback on timeout. "record": only record
-    # the violation (useful when measuring on a noisy laptop). "off": no timing.
-    deadline_mode: str = "enforce"
+    # "record":  default. Measure every call, count violations, but never let a
+    #            wall-clock event change the game, so records replay exactly.
+    # "enforce": apply the organizer's check/fold fallback on a timeout. Faithful
+    #            to rule 3.7, but NOT reproducible: a GC pause in the measuring
+    #            process replaces a decision and perturbs the rest of the table.
+    #            Use only for final tournament-faithfulness runs, not for research.
+    # "off":     no timing at all (fastest).
+    deadline_mode: str = "record"
 
     def with_(self, **changes) -> "GameRules":
         return replace(self, **changes)

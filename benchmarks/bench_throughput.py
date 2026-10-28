@@ -25,10 +25,10 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from pokerlab import __version__  # noqa: E402
-from pokerlab.bots import BOT_REGISTRY  # noqa: E402
-from pokerlab.tournament import run_tournament  # noqa: E402
-from pokerlab.variants import VARIANTS  # noqa: E402
+from pokergym import __version__  # noqa: E402
+from pokergym.bots import BOT_REGISTRY  # noqa: E402
+from pokergym.tournament import run_tournament  # noqa: E402
+from pokergym.variants import VARIANTS  # noqa: E402
 
 WARMUP = 5
 MIXES = {
@@ -59,7 +59,7 @@ def _machine():
         "eff_cores": sysctl("hw.perflevel1.physicalcpu"),
         "memory_bytes": sysctl("hw.memsize"),
         "python": sys.version.split()[0],
-        "pokerlab": __version__,
+        "pokergym": __version__,
     }
 
 
@@ -109,6 +109,27 @@ def run_config(mix, variant, n, workers, base_seed, deadline_mode):
     }
 
 
+def run_repeated(mix, variant, n, workers, base_seed, deadline_mode, repeats):
+    """Median of ``repeats`` independent runs (fresh pools, same seeds).
+
+    Single runs of short workloads are unreliable: a 0.1 s pool run can lose
+    most of its wall time to process start-up jitter. Medians are reported,
+    with the spread kept in the JSON.
+    """
+    runs = [run_config(mix, variant, n, workers, base_seed, deadline_mode) for _ in range(repeats)]
+    hs = sorted(r["hands_per_s"] for r in runs)
+    med = hs[len(hs) // 2]
+    best = dict(max(runs, key=lambda r: r["hands_per_s"]))  # the representative entry
+    best["hands_per_s"] = med
+    best["tournaments_per_s"] = n / (best["hands"] / med)
+    best["decisions_per_s"] = best["decisions"] / (best["hands"] / med)
+    best["repeats"] = repeats
+    best["hands_per_s_all"] = [r["hands_per_s"] for r in runs]
+    best["hands_per_s_min"] = hs[0]
+    best["hands_per_s_max"] = hs[-1]
+    return best
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tournaments", type=int, nargs="+", default=[100, 1000])
@@ -116,20 +137,24 @@ def main():
     ap.add_argument("--mix", nargs="+", default=["mixed"], choices=sorted(MIXES))
     ap.add_argument("--variant", default="baseline", choices=sorted(VARIANTS))
     ap.add_argument("--seed", type=int, default=1)
-    ap.add_argument("--deadline-mode", default="enforce", choices=["enforce", "record", "off"])
+    ap.add_argument("--deadline-mode", default="record", choices=["record", "enforce", "off"],
+                    help="record (default, reproducible) | enforce (rule 3.7 fallback, not reproducible) | off")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--repeats", type=int, default=3, help="median of N independent runs per configuration")
     a = ap.parse_args()
-    out = {"machine": _machine(), "command": " ".join(sys.argv), "warmup_tournaments": WARMUP, "results": []}
+    out = {"machine": _machine(), "command": " ".join(sys.argv), "warmup_tournaments": WARMUP,
+           "statistic": f"median of {a.repeats} runs", "results": []}
     print(json.dumps(out["machine"], indent=1))
     for mix in a.mix:
         for n in a.tournaments:
             for w in a.workers:
-                r = run_config(mix, a.variant, n, w, a.seed, a.deadline_mode)
+                r = run_repeated(mix, a.variant, n, w, a.seed, a.deadline_mode, a.repeats)
                 out["results"].append(r)
                 print(f"{mix:<9} n={n:<6} workers={w} | {r['hands_per_s']:>8.0f} hands/s "
                       f"{r['tournaments_per_s']:>7.1f} t/s {r['decisions_per_s']:>8.0f} dec/s | "
                       f"wall {r['wall_s']:.2f}s cpu {r['cpu_s']:.2f}s rss {r['max_rss_bytes_per_process']/1e6:.0f}MB "
-                      f"| {r['hands_per_tournament']:.0f} hands/t", flush=True)
+                      f"| {r['hands_per_tournament']:.0f} hands/t | spread "
+                      f"{r['hands_per_s_min']:.0f}-{r['hands_per_s_max']:.0f}", flush=True)
     if a.out:
         os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
         with open(a.out, "w") as f:

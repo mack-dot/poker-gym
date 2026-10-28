@@ -1,8 +1,8 @@
 """Command-line entry points.
 
-    python -m pokerlab.cli run    --seed 1 --variant baseline --bots call,random,heuristic,... [--out runs/x.json] [--verify]
-    python -m pokerlab.cli replay runs/x.json          # re-run from the record's seed and compare hashes
-    python -m pokerlab.cli round  --tables 100 --seed 1 --variant baseline
+    python -m pokergym.cli run    --seed 1 --variant baseline --bots call,random,heuristic,... [--out runs/x.json] [--verify]
+    python -m pokergym.cli replay runs/x.json          # re-run from the record's seed and compare hashes
+    python -m pokergym.cli round  --tables 100 --seed 1 --variant baseline
 """
 from __future__ import annotations
 
@@ -84,7 +84,7 @@ def cmd_round(a):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(prog="pokerlab")
+    p = argparse.ArgumentParser(prog="pokergym")
     sub = p.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run")
     r.add_argument("--seed", type=int, default=0)

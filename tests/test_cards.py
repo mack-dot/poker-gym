@@ -1,7 +1,7 @@
 import random
 from collections import Counter
 
-from pokerlab.cards import card_str, deal_cards, fresh_deck, parse_card, parse_cards
+from pokergym.cards import card_str, deal_cards, fresh_deck, parse_card, parse_cards
 
 
 def test_roundtrip_and_deck():

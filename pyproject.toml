@@ -1,7 +1,8 @@
 [project]
-name = "pokerlab"
+name = "pokergym"
 version = "0.1.0"
-description = "Fast, verified eight-player poker tournament simulator for No Limit rehearsal"
+description = "Poker Gym: fast, verified eight-player poker tournament simulator for No Limit rehearsal"
+readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
 
@@ -13,7 +14,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["pokerlab*"]
+include = ["pokergym*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

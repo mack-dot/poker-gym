@@ -3,8 +3,8 @@ import random
 
 import pytest
 
-from pokerlab.cards import card_str, parse_cards, fresh_deck
-from pokerlab.evaluator import (
+from pokergym.cards import card_str, parse_cards, fresh_deck
+from pokergym.evaluator import (
     FLUSH, FULL_HOUSE, HIGH_CARD, PAIR, QUADS, STRAIGHT, STRAIGHT_FLUSH,
     TRIPS, TWO_PAIR, Evaluator, STANDARD_EVALUATOR as E, evaluate,
 )

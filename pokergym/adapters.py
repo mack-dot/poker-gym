@@ -2,20 +2,20 @@
 
 Four seams are kept separate on purpose:
 
-1. Research simulator      -> ``pokerlab.engine`` / ``pokerlab.tournament``
-2. Game-rule specification -> ``pokerlab.rules`` (+ ``pokerlab.variants``)
-3. Agent observation protocol -> ``pokerlab.agent`` (``Observation``/``Action``)
-4. Tournament scoring engine -> ``pokerlab.tournament.run_round`` / ``final_score`` / ``pokerlab.icm``
+1. Research simulator      -> ``pokergym.engine`` / ``pokergym.tournament``
+2. Game-rule specification -> ``pokergym.rules`` (+ ``pokergym.variants``)
+3. Agent observation protocol -> ``pokergym.agent`` (``Observation``/``Action``)
+4. Tournament scoring engine -> ``pokergym.tournament.run_round`` / ``final_score`` / ``pokergym.icm``
 
 When the starter kit arrives, the plan is:
 
 * Write ``OfficialObservationAdapter`` here: a function from the kit's state
   object to our ``Observation`` (and our ``Action`` to the kit's action
-  encoding). Bots written against ``pokerlab.agent`` then run unchanged inside
+  encoding). Bots written against ``pokergym.agent`` then run unchanged inside
   the official simulator via ``OfficialAgentShim``.
 * Write ``KitRulesAdapter``: build a ``GameRules`` from the kit's payout
   structure, blind schedule and variant description, replacing the
-  ``SYNTHETIC`` defaults in ``pokerlab.rules``.
+  ``SYNTHETIC`` defaults in ``pokergym.rules``.
 * Run the parity harness: the same bots, the same seats and (if the kit
   exposes the deck) the same cards through both simulators; compare final
   stacks, finishing points and ICM allocations hand by hand (see

@@ -17,11 +17,11 @@ warm-up excluded. Probe scripts were kept outside the repo (`/tmp/pk_bench.py`,
 |---|---:|---:|---|
 | PokerKit 0.7.7 | **149** | 2,188 | 2,000 hands in 13.4 s. `cProfile`: ~90% of time inside showdown hand lookup (`lookups._get_key`, `utilities.clean`, `are_suited`, `isinstance`): ~2,400 lookups per hand. |
 | PyPokerEngine 1.0.1 | **216** | 6,611 | 200-hand game in 0.93 s with a call-heavy policy. (A naive run reported 19k hands/s because the table busted after 6 hands; that number was discarded.) |
-| pokerlab (this repo, after profiling) | **13,000–34,000** | 140k–325k | See `docs/benchmarks.md`. Depends on the bot mix; the all-call mix is the worst case (8-way showdowns every hand). |
+| pokergym (this repo, after profiling) | **12,000–34,000** | 121k–300k | Median of 3, single core. See `docs/benchmarks.md`. Depends on the bot mix; the all-call mix is the worst case (8-way showdowns every hand). |
 
 ## Criteria
 
-| Criterion | PokerKit | PyPokerEngine | pokerlab |
+| Criterion | PokerKit | PyPokerEngine | pokergym |
 |---|---|---|---|
 | Correctness | High (reference-grade state machine; used here as an oracle) | Known side-pot/min-raise rough edges; Python-2-era code | Proven by tests + 800-hand parity with PokerKit (`tests/test_differential_pokerkit.py`) |
 | Variant extensibility | Hand classes and lookups are deeply typed; a custom ranking means subclassing `Lookup`/`Hand`; betting structure fixed per game class | Minimal; no hook for ranking or raise rules | `HandRanking` (category permutation) and `BettingRules` are data; two mutations shipped |
@@ -29,7 +29,7 @@ warm-up excluded. Probe scripts were kept outside the repo (`/tmp/pk_bench.py`,
 | Side pots / showdown | Yes | Yes (less trusted) | Yes; layered pots merged by eligibility, odd chip left of button |
 | Python compatibility | 3.11+ | 2.7/3.x, unmaintained | 3.11+ |
 | Determinism | Yes with explicit dealing | Uses global `random` | Yes: one `random.Random(seed)`; per-seat bot seeds; sha256 record hash |
-| Throughput | 149 hands/s | 216 hands/s | 13k–34k hands/s single core; 95k–235k on 8 workers |
+| Throughput | 149 hands/s | 216 hands/s | 12k–34k hands/s single core; 59k–230k on 8 workers |
 | Integration complexity | Medium (automation flags, explicit dealing API) | Low but inflexible callback interface | Owned; ~700 lines for engine+rules+agent |
 
 ## Decision

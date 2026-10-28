@@ -1,6 +1,6 @@
 # Variant B — betting-rule mutation: pot-limit raises
 
-Rules object: `pokerlab.variants.VARIANT_B_POT_LIMIT` (`--variant pot-limit`).
+Rules object: `pokergym.variants.VARIANT_B_POT_LIMIT` (`--variant pot-limit`).
 
 ## Rule
 
@@ -36,8 +36,8 @@ with no-limit.
 ## Reproducible replay
 
 ```
-python -m pokerlab.cli run --seed 2026 --variant pot-limit --verify --out docs/replays/pot-limit_seed2026.json
-python -m pokerlab.cli replay docs/replays/pot-limit_seed2026.json
+python -m pokergym.cli run --seed 2026 --variant pot-limit --verify --out docs/replays/pot-limit_seed2026.json
+python -m pokergym.cli replay docs/replays/pot-limit_seed2026.json
 ```
 
 Record hash `89918ad5…` (186 hands; the baseline at the same seed plays 200 hands and ends in ICM).

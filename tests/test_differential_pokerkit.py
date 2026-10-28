@@ -14,11 +14,11 @@ pokerkit = pytest.importorskip("pokerkit")
 pytestmark = pytest.mark.filterwarnings("ignore::UserWarning")
 from pokerkit import Automation as A, NoLimitTexasHoldem  # noqa: E402
 
-from pokerlab.agent import CALL, CHECK, FOLD, AgentAdapter, TableInfo, raise_to  # noqa: E402
-from pokerlab.cards import card_str, fresh_deck  # noqa: E402
-from pokerlab.engine import play_hand  # noqa: E402
-from pokerlab.rules import BASELINE_RULES, BlindSchedule  # noqa: E402
-from pokerlab.testing import PolicyAgent, build_deck  # noqa: E402
+from pokergym.agent import CALL, CHECK, FOLD, AgentAdapter, TableInfo, raise_to  # noqa: E402
+from pokergym.cards import card_str, fresh_deck  # noqa: E402
+from pokergym.engine import play_hand  # noqa: E402
+from pokergym.rules import BASELINE_RULES, BlindSchedule  # noqa: E402
+from pokergym.testing import PolicyAgent, build_deck  # noqa: E402
 
 AUTOS = (A.ANTE_POSTING, A.BET_COLLECTION, A.BLIND_OR_STRADDLE_POSTING, A.CARD_BURNING,
          A.HOLE_CARDS_SHOWING_OR_MUCKING, A.HAND_KILLING, A.CHIPS_PUSHING, A.CHIPS_PULLING,
@@ -27,7 +27,7 @@ AUTOS = (A.ANTE_POSTING, A.BET_COLLECTION, A.BLIND_OR_STRADDLE_POSTING, A.CARD_B
 
 def decide(r, can_raise, can_check, lo, hi, mode, short_open=False):
     # Known divergence (documented in docs/fidelity.md): after checks, a short
-    # all-in *opening bet* reopens the action in PokerKit but not in pokerlab
+    # all-in *opening bet* reopens the action in PokerKit but not in pokergym
     # (TDA rule 43). The policy avoids making that bet so the rest stays strict.
     if can_raise and r < 0.35 and not short_open:
         if mode == "shove":

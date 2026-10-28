@@ -6,19 +6,19 @@ import random
 
 import pytest
 
-from pokerlab import engine as engine_mod
-from pokerlab.agent import FOLD, raise_to
-from pokerlab.bots import CallBot, HeuristicBot, RandomBot
-from pokerlab.cards import fresh_deck
-from pokerlab.checks import (
+from pokergym import engine as engine_mod
+from pokergym.agent import FOLD, raise_to
+from pokergym.bots import CallBot, HeuristicBot, RandomBot
+from pokergym.cards import fresh_deck
+from pokergym.checks import (
     InvariantError, check_card_conservation, check_chip_conservation, check_points, check_rotation,
     check_termination, check_tournament,
 )
-from pokerlab.evaluator import FLUSH, HIGH_CARD, Evaluator, evaluate
-from pokerlab.icm import brute_force_equities, icm_equities
-from pokerlab.rules import BASELINE_RULES
-from pokerlab.testing import ScriptedAgent, build_deck
-from pokerlab.tournament import run_tournament
+from pokergym.evaluator import FLUSH, HIGH_CARD, Evaluator, evaluate
+from pokergym.icm import brute_force_equities, icm_equities
+from pokergym.rules import BASELINE_RULES
+from pokergym.testing import ScriptedAgent, build_deck
+from pokergym.tournament import run_tournament
 
 
 def mixed():
@@ -137,14 +137,14 @@ def test_broken_side_pot_is_caught_by_scenario(scripted):
         def evaluate(self, cards):
             return 1
 
-    import pokerlab.rules as rules_mod
+    import pokergym.rules as rules_mod
 
     rules = BASELINE_RULES.with_(ranking=rules_mod.HandRanking())
     stacks = [2000] * 8
     stacks[2], stacks[3], stacks[4] = 100, 300, 1000
     ag = [ScriptedAgent({2: [raise_to(100)], 3: [raise_to(300)], 4: [raise_to(1000)]}.get(s, [FOLD])) for s in range(8)]
     deck = build_deck({2: "As Ad", 3: "Ks Kd", 4: "2s 2d"}, "3h 5d 8c 9s Jh", 0, list(range(8)))
-    from pokerlab.agent import AgentAdapter, TableInfo
+    from pokergym.agent import AgentAdapter, TableInfo
 
     adapters = [AgentAdapter(a, mode="off") for a in ag]
     for s, ad in enumerate(adapters):
@@ -157,14 +157,14 @@ def test_tampered_record_changes_hash():
     a = run_tournament(mixed(), seed=11)
     b = run_tournament(mixed(), seed=11)
     b.hands[0].board[0], b.hands[0].board[1] = b.hands[0].board[1], b.hands[0].board[0]
-    from pokerlab.tournament import _hash_hands
+    from pokergym.tournament import _hash_hands
 
     assert _hash_hands(a.hands, a.final_stacks, a.points) != _hash_hands(b.hands, b.final_stacks, b.points)
 
 
 def test_engine_mutation_no_button_move_is_caught(monkeypatch):
     """Mutate the runner so the button never moves; check_tournament must fail."""
-    import pokerlab.tournament as t
+    import pokergym.tournament as t
 
     original = t.play_hand
 

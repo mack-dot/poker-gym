@@ -2,12 +2,12 @@ import json
 
 import pytest
 
-from pokerlab.bots import CallBot, HeuristicBot, RandomBot
-from pokerlab.checks import check_tournament
-from pokerlab.icm import brute_force_equities
-from pokerlab.rules import BASELINE_RULES, SYNTHETIC_PAYOUTS
-from pokerlab.tournament import assign_finishes, final_score, run_round, run_tournament
-from pokerlab.variants import VARIANTS
+from pokergym.bots import CallBot, HeuristicBot, RandomBot
+from pokergym.checks import check_tournament
+from pokergym.icm import brute_force_equities
+from pokergym.rules import BASELINE_RULES, SYNTHETIC_PAYOUTS
+from pokergym.tournament import assign_finishes, final_score, run_round, run_tournament
+from pokergym.variants import VARIANTS
 
 TOTAL_POINTS = sum(SYNTHETIC_PAYOUTS.points)
 
@@ -136,7 +136,7 @@ def test_final_score_weights():
 
 
 def test_rules_reject_bad_payout_schedule():
-    from pokerlab.rules import PayoutSchedule
+    from pokergym.rules import PayoutSchedule
 
     with pytest.raises(ValueError):
         PayoutSchedule(points=(1, 2, 3, 4, 5, 6, 7, 8))

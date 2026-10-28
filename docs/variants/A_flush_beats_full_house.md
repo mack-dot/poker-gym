@@ -1,6 +1,6 @@
 # Variant A — hand-ranking mutation: flush beats full house
 
-Rules object: `pokerlab.variants.VARIANT_A_FLUSH_BEATS_FULL_HOUSE` (`--variant flush-beats-full-house`).
+Rules object: `pokergym.variants.VARIANT_A_FLUSH_BEATS_FULL_HOUSE` (`--variant flush-beats-full-house`).
 
 ## Rule
 
@@ -31,8 +31,8 @@ co-occur in seven cards, so detection is unaffected.
 ## Reproducible replay
 
 ```
-python -m pokerlab.cli run --seed 21 --variant flush-beats-full-house --verify --out docs/replays/flush-beats-full-house_seed21.json
-python -m pokerlab.cli replay docs/replays/flush-beats-full-house_seed21.json
+python -m pokergym.cli run --seed 21 --variant flush-beats-full-house --verify --out docs/replays/flush-beats-full-house_seed21.json
+python -m pokergym.cli replay docs/replays/flush-beats-full-house_seed21.json
 ```
 
 Seed 21, hand 0, board `Qs 4c Td 4d 3d`: seat 0 (`4h 3h`, full house) wins the

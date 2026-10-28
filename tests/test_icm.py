@@ -2,7 +2,7 @@ import random
 
 import pytest
 
-from pokerlab.icm import brute_force_equities, icm_equities, place_probabilities
+from pokergym.icm import brute_force_equities, icm_equities, place_probabilities
 
 
 def test_hand_computed_three_player_example():

@@ -1,9 +1,9 @@
 import time
 
-from pokerlab.agent import (
+from pokergym.agent import (
     CALL, CHECK, FOLD, Action, ActionType, AgentAdapter, Observation, raise_to,
 )
-from pokerlab.testing import CrashingAgent, PolicyAgent
+from pokergym.testing import CrashingAgent, PolicyAgent
 
 
 def obs(can_check=False, can_raise=True, lo=40, hi=2000, to_call=20):

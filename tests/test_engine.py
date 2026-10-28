@@ -3,11 +3,11 @@ import random
 
 import pytest
 
-from pokerlab.agent import CALL, CHECK, FOLD, ActionType, AgentAdapter, raise_to
-from pokerlab.engine import play_hand
-from pokerlab.rules import BASELINE_RULES, BettingRules, BlindSchedule
-from pokerlab.testing import ScriptedAgent, build_deck
-from pokerlab.variants import VARIANT_A_FLUSH_BEATS_FULL_HOUSE, VARIANT_B_POT_LIMIT
+from pokergym.agent import CALL, CHECK, FOLD, ActionType, AgentAdapter, raise_to
+from pokergym.engine import play_hand
+from pokergym.rules import BASELINE_RULES, BettingRules, BlindSchedule
+from pokergym.testing import ScriptedAgent, build_deck
+from pokergym.variants import VARIANT_A_FLUSH_BEATS_FULL_HOUSE, VARIANT_B_POT_LIMIT
 
 ALL = list(range(8))
 BOARD_DRY = "3h 5d 8c 9s Jh"

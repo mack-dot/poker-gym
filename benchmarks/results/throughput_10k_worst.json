@@ -9,10 +9,11 @@
   "eff_cores": "2",
   "memory_bytes": "17179869184",
   "python": "3.12.12",
-  "pokerlab": "0.1.0"
+  "pokergym": "0.1.0"
  },
- "command": "benchmarks/bench_throughput.py --tournaments 10000 --workers 8 --mix call heuristic --out benchmarks/results/throughput_10k_worst.json",
+ "command": "benchmarks/bench_throughput.py --tournaments 10000 --workers 8 --mix call heuristic --repeats 3 --out benchmarks/results/throughput_10k_worst.json",
  "warmup_tournaments": 5,
+ "statistic": "median of 3 runs",
  "results": [
   {
    "mix": "call",
@@ -20,16 +21,24 @@
    "tournaments": 10000,
    "workers": 8,
    "base_seed": 1,
-   "deadline_mode": "enforce",
+   "deadline_mode": "record",
    "hands": 1999190,
-   "decisions": 48391203,
-   "wall_s": 21.06672245892696,
-   "cpu_s": 162.00297899999998,
-   "hands_per_s": 94898.00816893799,
-   "tournaments_per_s": 474.6822871709942,
-   "decisions_per_s": 2297044.6918995874,
+   "decisions": 48391257,
+   "wall_s": 21.254642790998332,
+   "cpu_s": 162.07601400000001,
+   "hands_per_s": 91044.77412257923,
+   "tournaments_per_s": 455.40831097884256,
+   "decisions_per_s": 2203778.061651309,
    "hands_per_tournament": 199.919,
-   "max_rss_bytes_per_process": 28327936
+   "max_rss_bytes_per_process": 28311552,
+   "repeats": 3,
+   "hands_per_s_all": [
+    85511.88079812026,
+    91044.77412257923,
+    94058.97900324571
+   ],
+   "hands_per_s_min": 85511.88079812026,
+   "hands_per_s_max": 94058.97900324571
   },
   {
    "mix": "heuristic",
@@ -37,16 +46,24 @@
    "tournaments": 10000,
    "workers": 8,
    "base_seed": 1,
-   "deadline_mode": "enforce",
-   "hands": 1979698,
-   "decisions": 10370993,
-   "wall_s": 9.8074476250913,
-   "cpu_s": 76.275367,
-   "hands_per_s": 201856.5967087253,
-   "tournaments_per_s": 1019.6332809788427,
-   "decisions_per_s": 1057460.961959861,
-   "hands_per_tournament": 197.9698,
-   "max_rss_bytes_per_process": 27590656
+   "deadline_mode": "record",
+   "hands": 1979676,
+   "decisions": 10371134,
+   "wall_s": 9.99939649994485,
+   "cpu_s": 76.118146,
+   "hands_per_s": 195208.04073136047,
+   "tournaments_per_s": 986.0605509758186,
+   "decisions_per_s": 1022656.6106284045,
+   "hands_per_tournament": 197.9676,
+   "max_rss_bytes_per_process": 27623424,
+   "repeats": 3,
+   "hands_per_s_all": [
+    197979.54806681766,
+    195208.04073136047,
+    191828.9063587351
+   ],
+   "hands_per_s_min": 191828.9063587351,
+   "hands_per_s_max": 197979.54806681766
   }
  ]
 }
