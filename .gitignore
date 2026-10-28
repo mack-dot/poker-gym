@@ -5,3 +5,5 @@ __pycache__/
 runs/
 *.prof
 *.egg-info/
+build/
+dist/
