@@ -1,4 +1,4 @@
-# pokerlab — P0: fast, verified eight-player tournament simulator
+# pokergym — P0: fast, verified eight-player tournament simulator
 
 Rehearsal simulator for *No Limit: A Bot Building Tournament* (Sequoia ×
 Citadel Securities × OpenAI). Pure Python, no dependencies at runtime.
